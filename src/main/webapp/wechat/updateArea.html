@@ -1,0 +1,375 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+    <!--<link rel="stylesheet" type="text/css" href="./css/aui-slide.css" />-->
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+	</script>
+</head>
+<script type="text/javascript">
+    $(function () {
+
+        (function(){
+            addressId = $.getUrlParam('addressId');
+            userId = $.getUrlParam('userId');
+            $.ajax({
+                url : window.apiBasePath+"/api/address/getAddressDetails",
+                type : "GET",
+                data : {
+                    userId : userId,
+                    addressId : addressId
+                },
+                async : false,
+                success : function(data) {
+                    if(data.isSuccess==true){
+						var name,mobile,address,provinceId,cityId,areaId;
+                        name = data.data.name;
+                        mobile = data.data.mobile;
+                        address = data.data.address;
+                        provinceId = data.data.provinceId;
+                        cityId = data.data.cityId;
+                        areaId = data.data.areaId;
+                        isDefaultValue = data.data.isDefault;
+                        $("#name").val(name);
+                        $("#mobile").val(mobile);
+                        $("#address").val(address);
+                        //获取省份
+                        $.ajax({
+                            url : window.apiBasePath+"/api/address/getProvinceList",
+                            type : "GET",
+                            async : false,
+                            success : function(data) {
+                                if(data.isSuccess==true){
+                                    for (var i = 0; i < data.data.length; i++) {
+                                        if(provinceId==data.data[i].provinceId){
+                                            $("#province").append(
+                                                "<option  value='"+data.data[i].provinceId+"'  selected>"
+                                                + data.data[i].provinceName
+                                                + "</option>");
+										}else{
+                                            $("#province").append(
+                                                "<option  value='"+data.data[i].provinceId+"'>"
+                                                + data.data[i].provinceName
+                                                + "</option>");
+										}
+
+                                    }
+
+                                }
+
+                            }
+                        });
+                        //获取城市
+                        $.ajax({
+                            url : window.apiBasePath+"/api/address/getCityList",
+                            type : "GET",
+                            data : {
+                                provinceId : provinceId
+                            },
+                            async : false,
+                            success : function(data) {
+                                $("#city").html("");
+                                $("#city").append("<option >请选择所在城市</option>");
+
+                                if(data.isSuccess==true){
+                                    for (var i = 0; i < data.data.length; i++) {
+                                        if(cityId==data.data[i].cityId){
+                                            $("#city").append(
+                                                "<option  value='"+data.data[i].cityId+"' selected>"
+                                                + data.data[i].cityName
+                                                + "</option>");
+										}else {
+                                            $("#city").append(
+                                                "<option  value='"+data.data[i].cityId+"'>"
+                                                + data.data[i].cityName
+                                                + "</option>");
+										}
+
+                                    }
+
+                                }
+
+                            }
+                        });
+
+                        //获取城区
+                        $.ajax({
+                            url : window.apiBasePath+"/api/address/getAreaList",
+                            type : "GET",
+                            data : {
+                                cityId : cityId
+                            },
+                            async : false,
+                            success : function(data) {
+                                $("#area").html("");
+                                $("#area").append("<option >请选择所在城区</option>");
+
+                                if(data.isSuccess==true){
+                                    for (var i = 0; i < data.data.length; i++) {
+                                        if(areaId==data.data[i].areaId){
+                                            $("#area").append(
+                                                "<option  value='"+data.data[i].areaId+"' selected>"
+                                                + data.data[i].areaName
+                                                + "</option>");
+										}else{
+                                            $("#area").append(
+                                                "<option  value='"+data.data[i].areaId+"'>"
+                                                + data.data[i].areaName
+                                                + "</option>");
+										}
+
+
+                                    }
+
+                                }
+
+                            }
+                        });
+
+
+                    }
+                }
+            });
+        }());
+
+    });
+</script>
+<body>
+<header class="aui-bar aui-bar-nav">编辑</header>
+<div class="aui-content">
+<form action="/main/updateAddress.html" method="post" id="form">
+<input type="hidden" name="addr_id" value="${address.addr_id}">
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:10px;width:100%;height: 100px">
+		<div class="aui-content aui-margin-b-15">
+    <ul class="aui-list aui-form-list">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                 	  收件人
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入收件人姓名" name="addr_user" id="name">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                   	 联系电话
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入联系电话" name="addr_tel" id="mobile">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                	   所在地区
+                </div>
+                <div class="aui-list-item-input aui-pull-right" style="display: inline-block;">
+                	<div style="float:left;font-size: 1em;bottom:0;margin-right: 40px;vertical-align:bottom;display: inline-block;">
+                    <select id="province" name="province" onChange="provinceChange(this)">
+					 <option>请选择所在省份</option>
+					</select>
+					</div>
+					<div style="float:left;margin-right:40px;display: inline-block;">
+					<select id="city" name="city" onChange="cityChange(this)">
+					  <option >请选择所在城市</option>
+					</select>
+					</div>
+					<div style="float:left;">
+					<select id="area" name="area">
+					  <option>请选择所在城区</option>
+					</select>
+					</div>
+                </div>
+                
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                  	  详细地址
+                </div>
+                <div class="aui-list-item-input">
+                    <textarea name="addr_name" placeholder="请输入详细地址" id="address"></textarea>
+                 </div>
+               </div>
+            </li>
+        </ul>
+        </div>
+	</div>
+	
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:10px;width:100%;height: 40px">
+		<ul class="aui-list aui-select-list">
+    		<li class="aui-list-item">
+            	<div class="aui-list-item-inner">
+                <label>设为默认 <input  class="aui-checkbox" type="radio" name="isdefault" style="float:right;" value="0" onclick="isDefault(this)"></label>
+            	</div>
+       		 </li>
+    	</ul>
+	</div>
+	
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:208px;width:100%;height: 40px">
+		<ul class="aui-list aui-select-list">
+       		  <li class="aui-list-item">
+            <div class="aui-list-item-inner" onclick="deleteArea()">
+                <div class="aui-list-item-title">
+					<a href="javascript:void(0);" ><font color="#e51c23">删除收货地址</font></a>
+				</div>
+            </div>
+        </li>
+    	</ul>
+	</div>
+	
+	<div class="aui-content-padded" style="margin-bottom:14px;">
+      		<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="submitForm()">保存</div>
+     </div>
+     </form>
+	<div class="aui-content" style="margin-top:14px;margin-left:140px;">
+		<secton>
+			<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-left"></i>   
+        	</div>
+        	<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-right"></i>
+        	</div>
+		</secton>
+	</div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    function isDefault(obj) {
+        isDefaultValue = $("input[name='isdefault']:checked").val();
+        if(isDefaultValue==0){//设置默认
+            obj.value = 1;
+            isDefaultValue = 1;
+        }
+    }
+
+	function submitForm(){
+        var name = $("#name").val();
+        var mobile = $("#mobile").val();
+        var address = $("#address").val();
+        provinceId = $("#province").val();
+        cityId = $("#city").val();
+        areaId = $("#area").val();
+        $.ajax({
+            url : window.apiBasePath+"/api/address/updateAddress",
+            type : "POST",
+            data : {
+                name : name,
+                addressId : addressId,
+                mobile : mobile,
+                address : address,
+                provinceId : provinceId,
+                cityId : cityId,
+                userId : userId,
+                isDefault : isDefaultValue,
+                areaId : areaId
+            },
+            async : false,
+            success : function(data) {
+                if(data.isSuccess==true){
+                    window.location.href = '/wechat/listArea.html?userId='+userId;
+                }
+
+            }
+        });
+	}
+	var userId,addressId,isDefaultValue;
+
+
+	function deleteArea(addr_id){
+		if(confirm("确认删除该收货地址吗？")){
+            $.ajax({
+                url : window.apiBasePath+"/api/address/delAddress",
+                type : "POST",
+                data : {
+                    addressId : addressId,
+                    userId : userId
+                },
+                async : false,
+                success : function(data) {
+                    if(data.isSuccess==true){
+                        window.location.href = '/wechat/listArea.html?userId='+userId;
+                    }
+
+                }
+            });
+		}
+	}
+
+    function provinceChange(obj) {
+        provinceId = obj.options[obj.selectedIndex].value;
+        $.ajax({
+            url : window.apiBasePath+"/api/address/getCityList",
+            type : "GET",
+            data : {
+                provinceId : provinceId
+            },
+            async : false,
+            success : function(data) {
+                $("#city").html("");
+                $("#city").append("<option >请选择所在城市</option>");
+                $("#area").html("");
+                $("#area").append("<option >请选择所在城区</option>");
+
+                if(data.isSuccess==true){
+                    for (var i = 0; i < data.data.length; i++) {
+                        $("#city").append(
+                            "<option  value='"+data.data[i].cityId+"'>"
+                            + data.data[i].cityName
+                            + "</option>");
+                    }
+
+                }
+
+            }
+        });
+    }
+    function cityChange(obj) {
+        cityId = obj.options[obj.selectedIndex].value;
+        $.ajax({
+            url : window.apiBasePath+"/api/address/getAreaList",
+            type : "GET",
+            data : {
+                cityId : cityId
+            },
+            async : false,
+            success : function(data) {
+                $("#area").html("");
+                $("#area").append("<option >请选择所在城区</option>");
+
+                if(data.isSuccess==true){
+                    for (var i = 0; i < data.data.length; i++) {
+                        $("#area").append(
+                            "<option  value='"+data.data[i].areaId+"'>"
+                            + data.data[i].areaName
+                            + "</option>");
+                    }
+
+                }
+
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.help.dao.ShopHelpDao">
+    
+	<sql id="shopHelpColumns">
+		a.id AS "id",
+		a.question AS "question",
+		a.solution AS "solution",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+	<sql id="shopHelpJoins">
+	</sql>
+    
+	<select id="get" resultType="ShopHelp">
+		SELECT 
+			<include refid="shopHelpColumns"/>
+		FROM shop_help a
+		<include refid="shopHelpJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopHelp">
+		SELECT 
+			<include refid="shopHelpColumns"/>
+		FROM shop_help a
+		<include refid="shopHelpJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopHelp">
+		SELECT 
+			<include refid="shopHelpColumns"/>
+		FROM shop_help a
+		<include refid="shopHelpJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_help(
+			question,
+			solution,
+			add_time,
+			deleted
+		) VALUES (
+			#{question},
+			#{solution},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_help SET 	
+			question = #{question},
+			solution = #{solution},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_help
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

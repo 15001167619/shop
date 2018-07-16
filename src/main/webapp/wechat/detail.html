@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Hello APP</title>
+
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+    <!--<link rel="stylesheet" type="text/css" href="./css/aui-slide.css" />-->
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+	</script>
+</head>
+<script type="text/javascript">
+    $(function () {
+
+        (function(){
+            var knowledgeId = $.getUrlParam('knowledgeId');
+            console.log(knowledgeId);
+
+            $.ajax({
+                url : window.apiBasePath+"/api/knowledge/setKnowledgeBrowseCount",
+                type : "POST",
+                async : false,
+                data : {
+                    KnowledgeId : knowledgeId
+                },
+                success : function(data) {
+                    $.ajax({
+                        url : window.apiBasePath+"/api/knowledge/getKnowledgeDetails",
+                        type : "GET",
+                        async : false,
+                        data : {
+                            KnowledgeId : knowledgeId
+                        },
+                        success : function(data) {
+                            if(data.isSuccess==true){
+
+                                var desc = data.data.desc;
+                                var primaryPicUrl = data.data.primaryPicUrl;
+                                var name = data.data.name;
+                                $("#knowledgeName").html(name);
+                                $("#knowledgeDesc").val(desc);
+                                $("#knowledgePic").attr('src',primaryPicUrl);
+
+                            }
+
+                        }
+                    });
+                }
+            });
+        }());
+
+    });
+</script>
+<body>
+
+<header class="aui-bar aui-bar-nav">详情</header>
+
+<div class="aui-content">
+	<div class="aui-context-padded aui-grid" style="margin-top:0px;width: 100%;height: 150px;">
+		  <img alt="icon" src="./img/图层1@3x.png"  height="135px" style="width: 100%;" id="knowledgePic">
+	 </div>
+	
+	<div class="aui-grid" style="margin-top:0px;margin-bottom:15px;width:100%;height:421px;">
+		<div class="aui-content aui-margin-b-15">
+	    	<ul class="aui-list aui-media-list">
+			   <li class="aui-list-item">
+				   <div class="aui-list-item-inner">
+					 <div class="aui-list-item-input" id="knowledgeInfo">
+						<div class="aui-list-item-title" id="knowledgeName"></div>
+						 	<textarea id="knowledgeDesc"></textarea>
+					 </div>
+				   </div>
+				</li>
+	        </ul>
+		</div>
+	</div>
+		
+	<div class="aui-content" style="margin-left:140px;margin-bottom:15px;">
+		<secton>
+			<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-left"></i>   
+        	</div>
+        	<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-right"></i>
+        	</div>
+		</secton>
+	</div>
+</div>
+</body>
+</html>

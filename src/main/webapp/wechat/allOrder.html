@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title>Hello APP</title>
+<link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+</head>
+<body>
+	<header class="aui-bar aui-bar-nav">全部订单</header>
+	<!-- <div class="aui-content"> -->
+
+		<div class="aui-tab" id="tab">
+			<div class="aui-tab-item aui-active" onclick="allOrders()">全部</div>
+			<div class="aui-tab-item">
+				<div></div>
+				待付款
+			</div>
+			<div class="aui-tab-item">待发货</div>
+			<div class="aui-tab-item">待收货</div>
+			<div class="aui-tab-item">待评价</div>
+		</div>
+	 	<div id="tab1" class="tab-box aui-grid"
+			style="margin-top: 10px; margin-bottom: 10px; width: 100%; height: 192px">
+			<div class="aui-content aui-margin-b-15">
+				<ul class="aui-list aui-list-in">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title">
+								<font color="#e51c23">货品已发出</font>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="aui-list aui-media-list">
+					<li class="aui-list-item">
+						<div class="aui-media-list-item-inner">
+							<div class="aui-list-item-media">
+								<img src="./img/图层1@2x.png">
+							</div>
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-text">
+									<div class="aui-list-item-title">步态数据检测鞋</div>
+									<div class="aui-list-item-right">
+										<font color="#e51c23">￥2999.00</font>
+									</div>
+								</div>
+								<div class="aui-list-item-text">
+									<font size="2px">智能设备随时随地检测数据报告 &nbsp;
+										<style type="text/css" media="screen">
+.line_m {
+	text-decoration: line-through
+}
+</style> <span class="line_m">￥3200.00</span><br>
+										颜色分类：黑色，尺码：42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*1
+									</font>
+								</div>
+							</div>
+						</div>
+						<div class="aui-info" style="padding-top: 0">
+							<div class="aui-info-item"></div>
+							<div class="aui-info-item">共计1件商品
+								&nbsp;&nbsp;&nbsp;&nbsp;合计：￥2999.00</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="aui-hr" style="width: 245px;height: 1px;"></div>
+			<div class="aui-content-padded aui-pull-right">
+				<div class="aui-btn  aui-btn-outlined">查看物流</div>
+				<div class="aui-btn aui-btn-danger aui-btn-outlined">确认收货</div>
+			</div>
+		</div>
+		
+		<div id="tab2" class="tab-box" style="display: none;">
+			<div class="aui-grid"
+				style="margin-top: 10px; margin-bottom: 10px; width: 100%; height: 192px">
+				<div class="aui-content aui-margin-b-15">
+					<ul class="aui-list aui-list-in">
+						<li class="aui-list-item">
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-title">
+									<font color="#e51c23">货品已发出</font>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<ul class="aui-list aui-media-list">
+
+						<li class="aui-list-item">
+							<div class="aui-media-list-item-inner">
+								<div class="aui-list-item-media">
+									<img src="./img/图层1@2x.png">
+								</div>
+								<div class="aui-list-item-inner">
+									<div class="aui-list-item-text">
+										<div class="aui-list-item-title">步态数据检测鞋</div>
+										<div class="aui-list-item-right">
+											<font color="#e51c23">￥2999.00</font>
+										</div>
+									</div>
+									<div class="aui-list-item-text">
+										<font size="2px">智能设备随时随地检测数据报告 &nbsp;
+											<style type="text/css" media="screen">
+.line_m {
+	text-decoration: line-through
+}
+</style> <span class="line_m">￥3200.00</span><br>
+											颜色分类：黑色，尺码：42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*1
+										</font>
+									</div>
+								</div>
+							</div>
+							<div class="aui-info" style="padding-top: 0">
+								<div class="aui-info-item"></div>
+								<div class="aui-info-item">共计1件商品
+									&nbsp;&nbsp;&nbsp;&nbsp;合计：￥2999.00</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="aui-content-padded aui-pull-right">
+					<div class="aui-btn  aui-btn-outlined">取消订单</div>
+					&nbsp;&nbsp;
+					<div class="aui-btn aui-btn-danger aui-btn-outlined">付款</div>
+				</div>
+			</div>
+		</div>
+		<div id="tab3" class="tab-box" style="display: none;">
+			<div class="aui-grid"
+				style="margin-top: 10px; margin-bottom: 10px; width: 100%; height: 150px">
+				<div class="aui-content aui-margin-b-15">
+					<ul class="aui-list aui-list-in">
+						<li class="aui-list-item">
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-title">
+									<font color="#e51c23">货品已发出</font>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<ul class="aui-list aui-media-list">
+
+						<li class="aui-list-item">
+							<div class="aui-media-list-item-inner">
+								<div class="aui-list-item-media">
+									<img src="./img/图层1@2x.png">
+								</div>
+								<div class="aui-list-item-inner">
+									<div class="aui-list-item-text">
+										<div class="aui-list-item-title">步态数据检测鞋</div>
+										<div class="aui-list-item-right">
+											<font color="#e51c23">￥2999.00</font>
+										</div>
+									</div>
+									<div class="aui-list-item-text">
+										<font size="2px">智能设备随时随地检测数据报告 &nbsp;
+											<style type="text/css" media="screen">
+.line_m {
+	text-decoration: line-through
+}
+</style> <span class="line_m">￥3200.00</span><br>
+											颜色分类：黑色，尺码：42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*1
+										</font>
+									</div>
+								</div>
+							</div>
+							<div class="aui-info" style="margin-top: 0">
+								<div class="aui-info-item"></div>
+								<div class="aui-info-item" style="color: #000000">共计1件商品
+									&nbsp;&nbsp;&nbsp;&nbsp;合计：￥2999.00</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	<!-- </div> -->
+	<div id="tab4" class="tab-box" style="display: none;">
+		<div class="aui-grid"
+			style="margin-top: 10px; margin-bottom: 10px; width: 100%; height: 192px">
+			<div class="aui-content aui-margin-b-15">
+				<ul class="aui-list aui-list-in">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title">
+								<font color="#e51c23">货品已发出</font>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="aui-list aui-media-list">
+
+					<li class="aui-list-item">
+						<div class="aui-media-list-item-inner">
+							<div class="aui-list-item-media">
+								<img src="./img/图层1@2x.png">
+							</div>
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-text">
+									<div class="aui-list-item-title">步态数据检测鞋</div>
+									<div class="aui-list-item-right">
+										<font color="#e51c23">￥2999.00</font>
+									</div>
+								</div>
+								<div class="aui-list-item-text">
+									<font size="2px">智能设备随时随地检测数据报告 &nbsp;
+										<style type="text/css" media="screen">
+.line_m {
+	text-decoration: line-through
+}
+</style> <span class="line_m">￥3200.00</span><br>
+										颜色分类：黑色，尺码：42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*1
+									</font>
+								</div>
+							</div>
+						</div>
+						<div class="aui-info" style="padding-top: 0">
+							<div class="aui-info-item"></div>
+							<div class="aui-info-item" style="color: #000000">共计1件商品
+								&nbsp;&nbsp;&nbsp;&nbsp;合计：￥2999.00</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="aui-content-padded aui-pull-right">
+				<div class="aui-btn  aui-btn-outlined">查看物流</div>
+				&nbsp;&nbsp;
+				<div class="aui-btn aui-btn-danger aui-btn-outlined">确认收货</div>
+			</div>
+		</div>
+	</div>
+	<div id="tab5" class="tab-box" style="display: none;">
+		<div class="aui-grid"
+			style="margin-top: 10px; margin-bottom: 10px; width: 100%; height: 192px">
+			<div class="aui-content aui-margin-b-15">
+				<ul class="aui-list aui-list-in">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title">
+								<font color="#e51c23">货品已发出</font>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="aui-list aui-media-list">
+
+					<li class="aui-list-item">
+						<div class="aui-media-list-item-inner">
+							<div class="aui-list-item-media">
+								<img src="./img/图层1@2x.png">
+							</div>
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-text">
+									<div class="aui-list-item-title">步态数据检测鞋</div>
+									<div class="aui-list-item-right">
+										<font color="#e51c23">￥2999.00</font>
+									</div>
+								</div>
+								<div class="aui-list-item-text">
+									<font size="2px">智能设备随时随地检测数据报告 &nbsp;
+										<style type="text/css" media="screen">
+.line_m {
+	text-decoration: line-through
+}
+</style> <span class="line_m">￥3200.00</span><br>
+										颜色分类：黑色，尺码：42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*1
+									</font>
+								</div>
+							</div>
+						</div>
+						<div class="aui-info" style="padding-top: 0">
+							<div class="aui-info-item"></div>
+							<div class="aui-info-item" style="color: #000000">共计1件商品
+								&nbsp;&nbsp;&nbsp;&nbsp;合计：￥2999.00</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="aui-content-padded aui-pull-right">
+				<div class="aui-btn  aui-btn-outlined">查看物流</div>
+				&nbsp;&nbsp;
+				<div class="aui-btn aui-btn-danger aui-btn-outlined">评价</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="aui-content" style="margin-top: 300px; margin-left: 140px;">
+		<secton>
+		<div class="aui-col-xs-4">
+			<i class="aui-iconfont aui-icon-left"></i>
+		</div>
+		<div class="aui-col-xs-4">
+			<i class="aui-iconfont aui-icon-right"></i>
+		</div>
+		</secton>
+	</div>
+
+</body>
+<script type="text/javascript" src="./script/aui/api.js"></script>
+<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="./script/aui/aui-tab.js"></script>
+<script type="text/javascript">
+	/* var tab = new auiTab({
+		element : document.getElementById("tab"),
+		index : 1,
+		repeatClick : false
+	}, function(ret) {
+		console.log(ret);
+		$(".tab-box").hide();
+		$("#tab" + ret.index).show();
+	}); */
+function allOrders(){
+		window.location.href = '/main/allOrders.html';
+	}
+</script>
+</html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.address.dao.ShopAddressDao">
+    
+	<sql id="shopAddressColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.user_id AS "userId",
+		a.province_id AS "provinceId",
+		a.city_id AS "cityId",
+		a.area_id AS "areaId",
+		a.address AS "address",
+		a.mobile AS "mobile",
+		a.is_default AS "isDefault",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+
+	<select id="get" resultType="ShopAddress">
+		SELECT 
+			<include refid="shopAddressColumns"/>
+		FROM shop_address a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopAddress">
+		SELECT 
+			<include refid="shopAddressColumns"/>
+		FROM shop_address a
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.is_default desc,a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findAddressList" resultType="ShopAddress">
+		select * from (
+			select a.*,sra.name as areaName  from (
+			select a.*,src.name as cityName from(
+			select a.*,srp.name as provinceName from shop_address a
+			left join shop_region srp on a.province_id =  srp.id
+			) a left join shop_region src on a.city_id =  src.id
+			)a left join shop_region sra on a.area_id =  sra.id
+		) a
+		<where>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.is_default desc,a.add_time desc
+			</otherwise>
+		</choose>
+
+	</select>
+
+	<select id="findViewList" resultType="ShopAddress">
+		select * from (
+			select a.*,sra.name as areaName  from (
+			select a.*,src.name as cityName from(
+			select a.*,srp.name as provinceName from shop_address a
+			left join shop_region srp on a.province_id =  srp.id
+			) a left join shop_region src on a.city_id =  src.id
+			)a left join shop_region sra on a.area_id =  sra.id
+		) a
+		<where>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+
+	</select>
+
+	
+	<select id="findAllList" resultType="ShopAddress">
+		SELECT 
+			<include refid="shopAddressColumns"/>
+		FROM shop_address a
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_address(
+			name,
+			user_id,
+			province_id,
+			city_id,
+			area_id,
+			address,
+			mobile,
+			is_default,
+			add_time,
+			deleted
+		) VALUES (
+			#{name},
+			#{userId},
+			#{provinceId},
+			#{cityId},
+			#{areaId},
+			#{address},
+			#{mobile},
+			#{isDefault},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_address SET 	
+			name = #{name},
+			user_id = #{userId},
+			province_id = #{provinceId},
+			city_id = #{cityId},
+			area_id = #{areaId},
+			address = #{address},
+			mobile = #{mobile},
+			is_default = #{isDefault},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+
+	<update id="setDefaultValueZero" parameterType="int">
+		UPDATE shop_address SET
+			is_default = 0
+		WHERE user_id = #{userId}
+	</update>
+
+	<update id="delete">
+		DELETE FROM shop_address
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delAddress" parameterType="int">
+		DELETE FROM shop_address
+		WHERE
+			id = #{0}
+		AND user_id = #{1}
+	</delete>
+
+	<select id="getAddressDetails" parameterType="int" resultType="ShopAddress">
+		select * FROM shop_address
+		WHERE
+			id = #{0}
+		AND user_id = #{1}
+	</select>
+
+
+	
+</mapper>

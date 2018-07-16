@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.comment.dao.ShopCommentDao">
+    
+	<sql id="shopCommentColumns">
+		a.id AS "id",
+		a.business_type AS "businessType",
+		a.business_id AS "businessId",
+		a.visible AS "visible",
+		a.content AS "content",
+		a.user_id AS "userId",
+		a.has_picture AS "hasPicture",
+		a.pic_urls AS "picUrls",
+		a.star AS "star",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+
+	<select id="get" resultType="ShopComment">
+		SELECT 
+			<include refid="shopCommentColumns"/>
+		FROM shop_comment a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopComment">
+		SELECT 
+			<include refid="shopCommentColumns"/>
+		FROM shop_comment a
+		<where>
+			
+			<if test="businessType != null">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="businessId != null and businessId != ''">
+				AND a.business_id = #{businessId}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="visible != null">
+				AND a.visible = #{visible}
+			</if>
+			<if test="hasPicture != null">
+				AND a.has_picture = #{hasPicture}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findShopCommentList" resultType="ShopComment">
+		select * from (
+		select a.*,su.user_name as userName from shop_comment a left join  shop_user su on su.id = a.user_id
+		) a
+		<where>
+			<if test="businessType != null">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="businessId != null and businessId != ''">
+				AND a.business_id = #{businessId}
+			</if>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="visible != null">
+				AND a.visible = #{visible}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ShopComment">
+		SELECT 
+			<include refid="shopCommentColumns"/>
+		FROM shop_comment a
+		<where>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_comment(
+			business_type,
+			business_id,
+			visible,
+			content,
+			user_id,
+			has_picture,
+			pic_urls,
+			star,
+			add_time,
+			deleted
+		) VALUES (
+			#{businessType},
+			#{businessId},
+			#{visible},
+			#{content},
+			#{userId},
+			#{hasPicture},
+			#{picUrls},
+			#{star},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_comment SET 	
+			business_type = #{businessType},
+			business_id = #{businessId},
+			visible = #{visible},
+			content = #{content},
+			user_id = #{userId},
+			has_picture = #{hasPicture},
+			pic_urls = #{picUrls},
+			star = #{star},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+
+	<update id="forbidden" parameterType="int">
+		UPDATE shop_comment SET
+			visible = 1
+		WHERE id = #{id}
+	</update>
+
+	<update id="enable" parameterType="int">
+		UPDATE shop_comment SET
+			visible = 0
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_comment
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

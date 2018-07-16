@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+	<style>
+		.discount-list{}
+		.discount-item{padding: 20px;background: #fff;margin-top: 10px;}
+		.item-content{width: 336px;height: 91px;margin:0 auto;background: url("./img/圆角矩形1拷贝2@3x.png") no-repeat;background-size: 100% 100%;display: flex;}
+		.price{width: 237px;color: #fff;text-align: center;}
+		.wz{padding: 17px 0;padding-left: 24px;flex: 1;font-size: 20px;color: #F88003;}
+	</style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav">优惠券</header>
+<c:forEach items="${couponsList}" var="coupons">
+<div class="aui-content">
+	<div class="discount-list">
+		<div class="discount-item">
+			<div class="item-content">
+				<div class="price">
+					<div style="float: right;margin: 0 auto;padding-right: 20px;">
+						<div style="float: left;font-size: 20px;line-height: 20px;padding-top: 35px;">优惠券</div>
+						<div style="float: right;font-size: 40px;line-height: 70px;padding-top: 10px;font-weight: 600;margin-right: 10px;">￥${coupons.cps_price}</div>
+					</div>
+				</div>
+				<div class="wz">
+					<div onclick="immediatelyReceiveCoupons(${coupons.cps_id})">立即</div>
+					<div onclick="immediatelyReceiveCoupons(${coupons.cps_id})">领取</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</c:forEach>
+</body>
+<script type="text/javascript" src="./script/aui/api.js"></script>
+<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+var cps_id;
+function immediatelyReceiveCoupons(cps_id){
+	$.post("/main/immediatelyReceiveCoupons.html?cps_id="+cps_id,function(date){
+		alert(date);
+		window.location.href = '/main/goodsDetails.html?cps_id='+cps_id;
+	});
+}
+</script>
+</html>

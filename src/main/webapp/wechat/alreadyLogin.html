@@ -1,0 +1,308 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>Hello APP</title>
+	<link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/aui/aui-tab.js" ></script>
+	<script type="text/javascript" src="./script/aui/aui-dialog.js" ></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+        })(jQuery);
+
+        var userId,openId;
+        openId = $.getUrlParam('openId');
+
+	</script>
+	<script type="text/javascript">
+        $(function () {
+
+            (function () {
+                userId = $.getUrlParam('userId');
+                $.ajax({
+                    url: window.apiBasePath + "/api/user/getUserInfo",
+                    type: "GET",
+                    data: {
+                        userId: userId
+                    },
+                    async: false,
+                    success: function (data) {
+                        if (data.isSuccess == true) {
+                            var userName, gender, birthday,age,avatar;
+                            userName = data.data.userName;
+                            avatar = data.data.avatar;
+                            $("#avatar").attr('src',avatar);
+                            age = data.data.age;
+                            gender = data.data.gender;
+                            $("#userName").html(userName);
+                            $("#gender").val(gender);
+                            var gender = gender==1?'男':'女';
+                            var birthday = "&nbsp;&nbsp;&nbsp;&nbsp;"+age+"岁";
+							var gender_birthday = gender+birthday;
+                            $("#gender_birthday").html(gender_birthday);
+                            if (gender == 1) {
+                                $("#male").attr("checked", true)
+                            } else if (gender == 2) {
+                                $("#female").attr("checked", true)
+                            }
+
+                        }
+
+                    }
+                });
+            }());
+
+        });
+	</script>
+	<style type="text/css">
+		a:link {
+		 font-size: 12px;
+		 color: #000000;
+		 text-decoration: none;
+		}
+		a:visited {
+		 font-size: 12px;
+		 color: #000000;
+		 text-decoration: none;
+		}
+		a:hover {
+		 font-size: 12px;
+		 color: #999999;
+		 text-decoration: underline;
+	}
+	</style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav" style="position: fixed;">我的</header>
+
+<div style="height: 40px;"></div>
+<div class="aui-content">
+	<div style="display: flex;padding: 20px 15px;background: #303333;">
+		<!-- <img src="./img/头像@3x.png" style="width: 82px;height: 82px;"/> -->
+		<img src="" style="width: 82px;height: 82px;" id="avatar"/>
+		<div style="flex: 1;padding-left: 15px;padding-top: 16px;" onclick="toAddInfo()" >
+			<div style="color:#ffffff;"  id="userName"></div>
+			<div style="margin-top:5px; ">
+				<font color="#ffffff" size="2px" id="gender_birthday">
+					<!--男&nbsp;&nbsp;&nbsp;&nbsp;24岁-->
+				</font>
+			</div>
+		</div>
+	</div>
+
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:10px;height: 112px">
+		<div class="aui-content aui-margin-b-15">
+			<ul class="aui-list aui-list-in">
+				<li class="aui-list-item aui-list-item-middle">
+					<div class="aui-list-item-inner aui-list-item-arrow">
+						<div class="aui-list-item-title">全部订单</div>
+						<div class="aui-list-item-right" onclick="viewAllOrders()">查看全部订单</div>
+					</div>
+			</ul>
+		</div>
+
+		<section  class="aui-grid aui-margin-b-0">
+			<div class="aui-row">
+				<div class="aui-col-xs-3">
+					<i class="aui-iconfont aui-icon-cart"></i>
+					<div class="aui-grid-label">待付款</div>
+				</div>
+				<div class="aui-col-xs-3">
+					<i class="aui-iconfont aui-icon-map"></i>
+					<div class="aui-grid-label">代发货</div>
+				</div>
+				<div class="aui-col-xs-3">
+					<i class="aui-iconfont aui-icon-location"></i>
+					<div class="aui-grid-label">待收货</div>
+				</div>
+				<div class="aui-col-xs-3">
+					<i class="aui-iconfont aui-icon-comment"></i>
+					<div class="aui-grid-label">待评价</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+
+
+	<div class="aui-grid" style="margin-top:10px;">
+		<div class="aui-content aui-margin-b-0">
+			<ul class="aui-list aui-list-in">
+				<li class="aui-list-item aui-list-item-middle">
+					<div class="aui-list-item-label-icon">
+						<img alt="icon" src="./img/优惠券(4)@2x.png" width="22px" height="16px">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow" onclick="toMyCoupons()">
+						<div class="aui-list-item-inner">
+							我的优惠券
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<img alt="icon" src="./img/地址(8)@3x.png" width="22px" height="16px">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow" onclick="myReceivingAddress()" >
+						<div class="aui-list-item-inner">
+							我的收货地址
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<img alt="icon" src="./img/帮助中心(2)@3x.png" width="22px" height="16px">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow" onclick="myHelp()">
+						<div class="aui-list-item-inner">
+							帮助中心
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<img alt="icon" src="./img/意见反馈(12)@3x.png" width="22px" height="16px">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow" onclick="myFeedback()">
+						<div class="aui-list-item-inner">
+							意见反馈
+						</div>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<img alt="icon" src="./img/客服(1)@3x.png" width="22px" height="16px">
+					</div>
+					<div class="aui-list-item-inner aui-list-item-arrow">
+						<div class="aui-list-item-inner">
+   						 	<div class="aui-list-item-inner" tapmode onclick="openDialog('text')">客服热线</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<footer class="aui-bar aui-bar-tab" id="tab">
+	    <div class="aui-bar-tab-item aui-active" >
+	        <i class="aui-iconfont aui-icon-home" id="shouyetubiao" ></i>
+	       <div class="aui-bar-tab-label" id="shouye">首页</div>
+	    </div>
+	    <div class="aui-bar-tab-item" >
+	        <i class="aui-iconfont aui-icon-star" id="changshitubiao" ></i>
+	        <div class="aui-bar-tab-label" id="changshi">常识</div>
+	    </div>
+	    <div class="aui-bar-tab-item" >
+	        <i class="aui-iconfont aui-icon-my" id="wodetubiao" ></i>
+	        <div class="aui-bar-tab-label" id="wode">我的</div>
+	    </div>
+	</footer>
+</div>
+</body>
+
+<script type="text/javascript">
+	var dialog = new auiDialog({})
+	function openDialog(type){
+        $.ajax({
+            url: window.apiBasePath + "/api/hotline/getHotLine",
+            type: "GET",
+            async: false,
+            success: function (data) {
+                if (data.isSuccess == true) {
+                    var beginTime, endTime, telephone;
+                    beginTime = data.data.beginTime;
+                    endTime = data.data.endTime;
+                    telephone = data.data.telephone;
+                    switch (type) {
+                        case "text":
+                            dialog.alert({
+                                title:telephone,
+                                msg:'工作时间：'+beginTime+"-"+endTime,
+                                buttons:['取消','确定']
+                            },function(ret){
+                                //console.log(ret)
+                            })
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
+            }
+        });
+
+
+
+}
+
+
+
+function toAddInfo(){
+	window.location.href = '/wechat/addInfo.html?userId='+userId+'&openId='+openId;
+}
+
+function viewAllOrders(){
+	window.location.href = '/wechat/allOrder.html?userId='+userId+'&openId='+openId;
+}
+
+$(function () { 
+	$('#shouye').click(function() {
+		window.location.href = '/wechat/index.html?userId='+userId+'&openId='+openId;
+	});
+	$('#shouyetubiao').click(function() {
+		window.location.href = '/wechat/index.html?userId='+userId+'&openId='+openId;
+	});
+	$('#changshi').click(function() {
+		window.location.href = '/wechat/commonSense.html?userId='+userId+'&openId='+openId;
+	});
+	$('#changshitubiao').click(function() {
+		window.location.href = '/wechat/commonSense.html?userId='+userId+'&openId='+openId;
+	});
+	$('#wode').click(function() {
+        userId = $.getUrlParam('userId');
+        openId = $.getUrlParam('openId');
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './alreadyLogin.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './login.html?openId='+openId;
+        }
+	});
+	$('#wodetubiao').click(function() {
+        userId = $.getUrlParam('userId');
+        openId = $.getUrlParam('openId');
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './alreadyLogin.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './login.html?openId='+openId;
+        }
+	});
+});
+function toMyCoupons(){
+	window.location.href = '/wechat/myCoupons.html?userId='+userId+'&openId='+openId;
+}
+function myReceivingAddress() {
+	window.location.href = '/wechat/listArea.html?userId='+userId+'&openId='+openId;
+}
+function myHelp() {
+	window.location.href = '/wechat/help.html?userId='+userId+'&openId='+openId;
+}
+
+function myFeedback() {
+	window.location.href = '/wechat/feedback.html?userId='+userId+'&openId='+openId;
+}
+</script>
+</html>

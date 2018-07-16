@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.relation.dao.ShopUserCouponDao">
+    
+	<sql id="shopUserCouponColumns">
+		a.id AS "id",
+		a.coupon_id AS "couponId",
+		a.user_id AS "userId",
+		a.order_id AS "orderId",
+		a.used_time AS "usedTime",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+
+	<select id="get" resultType="ShopUserCoupon">
+		SELECT 
+			<include refid="shopUserCouponColumns"/>
+		FROM shop_user_coupon a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopUserCoupon">
+		SELECT 
+			<include refid="shopUserCouponColumns"/>
+		FROM shop_user_coupon a
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findCouponList" resultType="ShopUserCoupon">
+		select * from (
+		select a.*,sc.name as couponName,sc.coupon_type as couponType,sc.`status`,sc.money  from shop_user_coupon a left join shop_coupon sc on a.coupon_id = sc.id)
+		a
+		<where>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="couponType != null">
+				AND a.couponType = #{couponType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ShopUserCoupon">
+		SELECT 
+			<include refid="shopUserCouponColumns"/>
+		FROM shop_user_coupon a
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_user_coupon(
+			coupon_id,
+			user_id,
+			order_id,
+			used_time,
+			add_time,
+			deleted
+		) VALUES (
+			#{couponId},
+			#{userId},
+			#{orderId},
+			#{usedTime},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_user_coupon SET 	
+			coupon_id = #{couponId},
+			user_id = #{userId},
+			order_id = #{orderId},
+			used_time = #{usedTime},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_user_coupon
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

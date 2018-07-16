@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title>Hello APP</title>
+<link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+<script type="text/javascript" src="./script/aui/api.js"></script>
+<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript" src="./script/aui/aui-dialog.js" ></script>
+<script type="text/javascript">
+
+	var userId,openId;
+    openId = $.getUrlParam('openId');
+
+function sendVerify(){
+    var phone = $("#phone").val();
+    var dialog = new auiDialog({});
+    if(phone==""||phone == null){
+        switch ('text') {
+            case "text":
+                dialog.alert({
+                    title:"手机号未输入",
+                    msg:'请输入手机号',
+                    buttons:['取消','确定']
+                },function(ret){
+                    console.log(ret)
+                })
+                break;
+            default:
+                break;
+        }
+	}else{
+        $.ajax({
+            url : window.apiBasePath+"/api/sms/sendCode",
+            type : "POST",
+            data : {
+                phone : phone
+            },
+            async : false,
+            success : function(data) {
+                switch ('text') {
+                    case "text":
+                        dialog.alert({
+                            title:"验证码已发送",
+                            msg:'请输入验证码',
+                            buttons:['取消','确定']
+                        },function(ret){
+                            console.log(ret)
+                        })
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        });
+	}
+
+}
+function login(){
+	var phone=$("#phone").val();
+	var verify=$("#verify").val();
+    $.ajax({
+        url : window.apiBasePath+"/api/auth/signInOrRegister",
+        type : "POST",
+        data : {
+            mobile : phone,
+            openId : openId,
+            code : verify
+        },
+        async : false,
+        success : function(data) {
+            if(data.isSuccess==true){
+                userId = data.data.userId;
+                window.userId = userId;
+                window.openId = openId;
+                window.location.href = '/wechat/alreadyLogin.html?userId='+userId+'&openId='+openId;
+			}
+        }
+    });
+}
+</script>
+</head>
+<body>
+	<div class="aui-context">
+		<header class="aui-bar aui-bar-nav">登录</header>
+	</div>
+	<div>
+		<div class="aui-context-padded" style="padding-top: 40px;">
+			<img alt="icon" src="./img/LOGO@3x.png" width="90px" height="89px"
+				style="margin: 0 auto;">
+		</div>
+
+		<div class="aui-content"
+			style="padding-top: 51px; padding-left: 10px; padding-right: 10px">
+			<ul class="aui-list aui-list-in">
+				<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<i class="aui-iconfont aui-icon-my"></i>
+					</div>
+					<div class="aui-list-item-inner">
+						<input type="text" name="phone" placeholder="请输入您的手机号" id="phone"/>
+					</div>
+				</li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<i class="aui-iconfont aui-icon-lock"></i>
+					</div>
+					<div class="aui-list-item-inner">
+						<input type="text" name="verify" placeholder="请输入验证码" id="verify"/>
+						<div class="aui-content-padded" >
+							<div class="aui-btn aui-btn-warning"  id="sendVerify" onclick="sendVerify()">发送验证码</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="aui-content-padded" style="padding-top: 42px;" >
+			<div class="aui-btn aui-btn-primary aui-btn-block aui-btn-sm" id="login" onclick="login()">登录</div>
+		</div>
+		<div class="aui-content-padded"
+			style="padding-top: 82px; padding-left: 62px; padding-right: 62px;">
+
+			<p>
+				<font size="1px" color="#a1afc9">你好方便后期体验产品，请使用患者手机号登录</font>
+			</p>
+
+		</div>
+	</div>
+</body>
+</html>

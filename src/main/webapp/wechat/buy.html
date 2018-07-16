@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Hello APP</title>
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+<link rel="stylesheet" type="text/css" href="./css/aui-slide.css" />
+</head>
+<body>
+	<header class="aui-bar aui-bar-nav">购买</header>
+
+	<div class="aui-content">
+
+		<div class="aui-content aui-margin-t-10">
+			<ul class="aui-list aui-list-in">
+				<li class="aui-list-item aui-list-item-middle"><c:if
+						test="${flag==0}">
+						<div class="aui-list-item-inner aui-list-item-arrow"
+							onclick="myReceivingAddress()">
+							<div class="aui-list-item-title">
+								配送地址<br> <font color="#808080" size="1px">请填写您的收货地址</font>
+							</div>
+						</div>
+					</c:if> <c:if test="${flag==1}">
+						<div class="aui-grid"
+							style="margin-top: 15px; width: 100%; height: 84px;" onclick="myReceivingAddress()">
+							<div
+								class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+								<div class="aui-info-item">
+									<span class="aui-margin-l-5" style="color: #000000">${address.addr_user}<!-- 宋仲基 --></span>
+									<span class="aui-margin-l-15">${address.addr_tel}<!-- 18210948657 --></span>
+								</div>
+							</div>
+
+							<div class="aui-list-item aui-pull-left"
+								style="margin-bottom: 15px;">
+								<div class="aui-info-item"
+									style="width: 296px; height: 30px; font-size: 1em; bottom: 0; margin-left: 1px; height: auto; float: left; display: inline;">
+									<span class="aui-margin-l-10">
+									<c:if test="${address.isdefault==1}"> 
+									<font color="#e51c23" size="2px">[默认]</font>
+									</c:if>
+									<font size="2px">
+									${address.province} ${address.city} ${address.area} ${address.addr_name}
+									<!-- 北京 北京市 丰台区 卢沟桥街道 紫宸园阅园五区 11号楼16层 --></font>
+									</span>
+								</div>
+								<!-- <div class="aui-content"
+									style="margin-left: 11px; height: auto; float: left; display: inline;">
+									<img alt="icon" src="./img/形状1@3x.png" width="1px"
+										height="29px">
+								</div> -->
+								<!-- <div
+									style="margin-left: 10px; height: auto; float: left; display: inline; color: #808080;">
+									<span>编辑</span>
+								</div> -->
+							</div>
+						</div>
+					</c:if></li>
+			</ul>
+		</div>
+
+		<div class="aui-grid"
+			style="margin-top: 10px; margin-bottom: 0px; width: 100%; height: 109px;">
+			<div class="aui-content aui-margin-b-0">
+				<ul class="aui-list aui-list-in">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title">
+								<font>1件商品</font>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="aui-list aui-media-list">
+					<li class="aui-list-item">
+						<div class="aui-media-list-item-inner">
+							<div class="aui-list-item-media">
+								<img src="./img/图层1@2x.png">
+							</div>
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-text">
+									<div class="aui-list-item-title">${goods_names[0]}<!-- 步态数据检测鞋 -->
+									</div>
+									<div class="aui-list-item-right">
+										<font color="#e51c23">￥${goods_price}<!-- ￥2999.00 --></font>
+									</div>
+								</div>
+								<div class="aui-list-item-text">
+									<font size="2px">${goods_names[1]}<!-- 智能设备随时随地检测数据报告 -->
+										<br> 颜色分类：${color}，尺码：${size}<!-- 颜色分类：黑色，尺码：42 -->
+									</font>
+								</div>
+							</div>
+						</div>
+				</ul>
+			</div>
+		</div>
+		<div class="aui-hr" style="width: 245px; height: 1px;"></div>
+		<div class="aui-content" style="width: 100%; height: 125px;">
+			<ul class="aui-list aui-list-in">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-title">商品其它金额：</div>
+					</div>
+				</li>
+			</ul>
+			<div class="aui-content aui-margin-b-10">
+				<ul class="aui-list aui-list-in">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title" style="color: #808080;">运费：</div>
+							<div class="aui-list-item-right">
+								￥${freight}
+								<!-- ￥0 -->
+							</div>
+						</div>
+					</li>
+					<c:if test="${couponsFlag==true}">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title" style="color: #808080;">优惠：</div>
+							<div class="aui-list-item-right">
+								￥${coupons.cps_price}
+								<!-- ￥100 -->
+							</div>
+						</div>
+					</li>
+					</c:if>
+					<c:if test="${couponsFlag==false}">
+					<li class="aui-list-item">
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-title" style="color: #808080;">优惠：</div>
+							<div class="aui-list-item-right">
+								￥0
+								<!-- ￥100 -->
+							</div>
+						</div>
+					</li>
+					</c:if>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="aui-content" style="margin-top: 220px">
+		<ul class="aui-list aui-form-list">
+			<li class="aui-list-item">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-label">
+						应付金额：￥${amountPayable}
+						<!-- 应付金额：$2888.00 -->
+					</div>
+					<div class="aui-list-item-label aui-pull-right">
+						<div class="aui-btn aui-btn-danger" onclick="createOrder()">提交订单<!-- 立即购买 --></div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="aui-content" style="margin-top: 14px; margin-left: 140px;">
+		<secton>
+		<div class="aui-col-xs-4">
+			<i class="aui-iconfont aui-icon-left"></i>
+		</div>
+		<div class="aui-col-xs-4">
+			<i class="aui-iconfont aui-icon-right"></i>
+		</div>
+		</secton>
+	</div>
+	<form action="/main/createOrder.html" method="post" id="form">
+	<input type="hidden" name="color" value="${color}"> 
+	<input type="hidden" name="size" value="${size}"> 
+	<input type="hidden" name="addr_id" value="${address.addr_id}">
+	<c:if test="${couponsFlag==true}">
+	<input type="hidden" name="cps_id" value="${coupons.cps_id}">
+	</c:if> 
+	</form>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+	function myReceivingAddress() {
+		window.location.href = '/main/myReceivingAddress.html';
+	}
+	function createOrder(){
+		var form = document.getElementById('form');
+		form.submit();
+	}
+</script>
+</html>

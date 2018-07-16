@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+    <!--<link rel="stylesheet" type="text/css" href="./css/aui-slide.css" />-->
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+	</script>
+</head>
+<script type="text/javascript">
+    $(function () {
+
+        (function(){
+            userId = $.getUrlParam('userId');
+            $.ajax({
+                url : window.apiBasePath+"/api/address/getAddressList",
+                type : "GET",
+                data : {
+                    userId : userId,
+                    pageNo : 1,
+                    pageSize : 80
+                },
+                async : false,
+                success : function(data) {
+                    if(data.isSuccess==true){
+
+                        var addressListSize = data.data.addressList.length;
+                        if(addressListSize==0){
+                            window.location.href = '/wechat/area.html?userId='+userId;
+						}else{
+                            for (var i = 0; i < data.data.addressList.length; i++) {
+
+                                var addressId = data.data.addressList[i].addressId;
+
+                                if(data.data.addressList[i].isDefault==1){
+                                    $("#addressList").append(
+                                        "<div class='aui-grid' style='margin-top:15px;width:100%;height:84px;'>"+
+                                        "<div class='aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10'>"+
+                                        "<div class='aui-info-item'>"+
+                                        "<span class='aui-margin-l-5' style='color:#000000 '>"+data.data.addressList[i].name+"</span>"+
+                                        "<span class='aui-margin-l-15'>"+data.data.addressList[i].mobile+"</span></div></div>"+
+                                        "<div class='aui-list-item aui-pull-left' style='margin-bottom:15px; '>"+
+                                        "<div class='aui-info-item' style='width: 296px;height: 30px;font-size: 1em;bottom:0;margin-left: 1px;height:auto; float:left; display:inline;'>"+
+                                        "<span class='aui-margin-l-10'>"+
+                                        "<font color='#e51c23' size='2px'>[默认]</font>"+
+                                        "<font size='2px'>"+data.data.addressList[i].provinceName+" "+data.data.addressList[i].cityName+" "+data.data.addressList[i].areaName+" "+data.data.addressList[i].address+"</font></span></div>"+
+                                        "<div class='aui-content' style='margin-left:11px;height:auto; float:left; display:inline;'>"+
+                                        "<img alt='icon' src='./img/形状1@3x.png' width='1px' height='29px' ></div>"+
+                                        "<div style='margin-left:10px; height:auto; float:left; display:inline;color: #808080;'>"+
+                                        "<span onclick='toUpdateArea("+addressId+")'>编辑</span></div></div></div>"
+                                    );
+                                }else{
+                                    $("#addressList").append(
+                                        "<div class='aui-grid' style='margin-top:15px;width:100%;height:84px;'>"+
+                                        "<div class='aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10'>"+
+                                        "<div class='aui-info-item'>"+
+                                        "<span class='aui-margin-l-5' style='color:#000000 '>"+data.data.addressList[i].name+"</span>"+
+                                        "<span class='aui-margin-l-15'>"+data.data.addressList[i].mobile+"</span></div></div>"+
+                                        "<div class='aui-list-item aui-pull-left' style='margin-bottom:15px; '>"+
+                                        "<div class='aui-info-item' style='width: 296px;height: 30px;font-size: 1em;bottom:0;margin-left: 1px;height:auto; float:left; display:inline;'>"+
+                                        "<span class='aui-margin-l-10'>"+
+                                        "<font size='2px'>"+data.data.addressList[i].provinceName+" "+data.data.addressList[i].cityName+" "+data.data.addressList[i].areaName+" "+data.data.addressList[i].address+"</font></span></div>"+
+                                        "<div class='aui-content' style='margin-left:11px;height:auto; float:left; display:inline;'>"+
+                                        "<img alt='icon' src='./img/形状1@3x.png' width='1px' height='29px' ></div>"+
+                                        "<div style='margin-left:10px; height:auto; float:left; display:inline;color: #808080;'>"+
+                                        "<span onclick='toUpdateArea("+addressId+")'>编辑</span></div></div></div>"
+                                    );
+                                }
+                            }
+
+						}
+
+                    }
+                }
+            });
+        }());
+
+    });
+</script>
+<body>
+<header class="aui-bar aui-bar-nav">我的收货地址</header>
+<div class="aui-content">
+
+	<div id="addressList">
+	</div>
+
+
+
+	<div class="aui-content-padded" style="margin-top:335px;margin-bottom:14px;">
+      		<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm"  onclick="toAddArea()" >添加新的收货地址</div>
+     </div>
+	<div class="aui-content" style="margin-top:14px;margin-left:140px;">
+		<secton>
+			<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-left"></i>   
+        	</div>
+        	<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-right"></i>
+        	</div>
+		</secton>
+	</div>
+</div>
+</body>
+
+<script type="text/javascript">
+var userId,addr_id;
+function toUpdateArea(addressId){
+	window.location.href = '/wechat/updateArea.html?addressId='+addressId+'&userId='+userId;
+}
+function toAddArea(){
+	window.location.href = '/wechat/addArea.html?userId='+userId;
+}
+</script>
+</html>

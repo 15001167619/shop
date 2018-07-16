@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.feedback.dao.ShopFeedbackDao">
+    
+	<sql id="shopFeedbackColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.feedback_desc AS "feedbackDesc",
+		a.pic_url AS "picUrl",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+	<select id="get" resultType="ShopFeedback">
+		SELECT 
+			<include refid="shopFeedbackColumns"/>
+		FROM shop_feedback a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopFeedback">
+		SELECT 
+			<include refid="shopFeedbackColumns"/>
+		FROM shop_feedback a
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopFeedback">
+		SELECT 
+			<include refid="shopFeedbackColumns"/>
+		FROM shop_feedback a
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_feedback(
+			user_id,
+			feedback_desc,
+			pic_url,
+			add_time,
+			deleted
+		) VALUES (
+			#{userId},
+			#{feedbackDesc},
+			#{picUrl},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_feedback SET 	
+			user_id = #{userId},
+			feedback_desc = #{feedbackDesc},
+			pic_url = #{picUrl},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_feedback
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

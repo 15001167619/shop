@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.user.dao.ShopUserDao">
+    
+	<sql id="shopUserColumns">
+		a.id AS "id",
+		a.user_name AS "userName",
+		a.password AS "password",
+		a.gender AS "gender",
+		a.birthday AS "birthday",
+		a.user_level AS "userLevel",
+		a.nick_name AS "nickName",
+		a.mobile AS "mobile",
+		a.avatar AS "avatar",
+		a.weixin_openid AS "weixinOpenid",
+		a.status AS "status",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+	<sql id="shopUserJoins">
+	</sql>
+    
+	<select id="get" resultType="ShopUser">
+		SELECT 
+			<include refid="shopUserColumns"/>
+		FROM shop_user a
+		<include refid="shopUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopUser">
+		SELECT 
+			<include refid="shopUserColumns"/>
+		FROM shop_user a
+		<include refid="shopUserJoins"/>
+		<where>
+			
+			<if test="userName != null and userName != ''">
+				AND a.user_name LIKE CONCAT('%', #{userName}, '%')
+			</if>
+			<if test="gender != null and gender != ''">
+				AND a.gender = #{gender}
+			</if>
+			<if test="nickName != null and nickName != ''">
+				AND a.nick_name LIKE CONCAT('%', #{nickName}, '%')
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE CONCAT('%', #{mobile}, '%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				order by a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopUser">
+		SELECT 
+			<include refid="shopUserColumns"/>
+		FROM shop_user a
+		<include refid="shopUserJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		<selectKey resultType="java.lang.String" order="AFTER"
+				   keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		INSERT INTO shop_user(
+			user_name,
+			password,
+			gender,
+			birthday,
+			user_level,
+			nick_name,
+			mobile,
+			avatar,
+			weixin_openid,
+			status,
+			add_time,
+			deleted
+		) VALUES (
+			#{userName},
+			#{password},
+			#{gender},
+			#{birthday},
+			#{userLevel},
+			#{nickName},
+			#{mobile},
+			#{avatar},
+			#{weixinOpenid},
+			#{status},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_user SET 	
+			user_name = #{userName},
+			password = #{password},
+			gender = #{gender},
+			birthday = #{birthday},
+			user_level = #{userLevel},
+			nick_name = #{nickName},
+			mobile = #{mobile},
+			avatar = #{avatar},
+			weixin_openid = #{weixinOpenid},
+			status = #{status},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_user
+		WHERE id = #{id}
+	</update>
+
+	<select id="getMobile" resultType="int" parameterType="string">
+		select count(1) from shop_user a where a.mobile = #{mobile}
+	</select>
+
+	<select id="getUserInfoByMobile" resultType="ShopUser" parameterType="string">
+		SELECT
+		<include refid="shopUserColumns"/>
+		FROM shop_user a
+		WHERE a.mobile = #{mobile}
+	</select>
+	
+</mapper>

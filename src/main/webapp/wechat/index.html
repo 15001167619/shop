@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+<meta name="format-detection"
+	content="telephone=no,email=no,date=no,address=no">
+<title>Hello APP</title>
+<link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+<!--<link rel="stylesheet" type="text/css" href="./css/aui/aui-slide.css" />-->
+<script type="text/javascript" src="./script/aui/api.js"></script>
+<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="./script/shop-base-api.js"></script>
+<script type="text/javascript" src="./script/aui/aui-tab.js" ></script>
+	<script type="text/javascript">
+        function openCommodity(commodityId) {
+            window.location.href = '/wechat/goodDetail.html?commodityId='+commodityId;
+        };
+        var userId,openId;
+        openId = $.getUrlParam('openId');
+        userId = $.getUrlParam('userId');
+	</script>
+<style type="text/css">
+	a:link {
+	 font-size: 12px;
+	 color: #000000;
+	 text-decoration: none;
+	}
+	a:visited {
+	 font-size: 12px;
+	 color: #000000;
+	 text-decoration: none;
+	}
+	a:hover {
+	 font-size: 12px;
+	 color: #999999;
+	 text-decoration: underline;
+	}
+</style>
+<script type="text/javascript">
+	var commodityId,userId,openId;
+
+$(function () {
+
+    (function(){
+        $.ajax({
+            url : window.apiBasePath+"/api/commodity/getCommodityList",
+            type : "GET",
+            async : false,
+            data : {
+                isHot : 1,
+                pageNo : 1,
+                pageSize : 1
+            },
+            success : function(data) {
+                if(data.isSuccess==true){
+                    for (var i = 0; i < data.data.listCommodity.length; i++) {
+                        var path = data.data.listCommodity[i].coverPicUrl;
+                        commodityId = data.data.listCommodity[i].commodityId;
+                        $("#aui-content-view").append(
+                            "<div style='width: 345px;height: 145px;background: url('') no-repeat;background-size: 100% 100%;color:#fff;' id='coverPicUrl'>"+
+								" <div style='padding-top:11px;margin-left: 14px;width: 108px;height: 17px;'>"+
+								"<font size='3px'><b>"+data.data.listCommodity[i].name+"</b></font></div>"+
+								"<div style='margin-top:8px;margin-left: 14px;width: 112px;height: 9px;'>"+
+								" <font size='1px'>"+data.data.listCommodity[i].englishName+"</font></div>"+
+								"<div style='margin-top:17px;margin-left: 15px;width: 160px;height: 12px;'>"+
+								"<font size='2px'>"+data.data.listCommodity[i].brief+"</font></div>"+
+								"<div style='margin-top:34px;margin-left: 23px;width: 70px;height: 15px;' id='view'>"+
+								"<font size='3px' onclick='openCommodity("+commodityId+")'>查看详情</font></div></div>"
+						);
+                        $("#coverPicUrl").css("background", 'url("' + path + '")');
+                    }
+
+				}
+
+            }
+        });
+    }());
+
+    $('#shouye').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './index.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './index.html?openId='+openId;
+        }
+	});
+	$('#shouyetubiao').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './index.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './index.html?openId='+openId;
+        }
+	});
+	$('#img').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/goodDetail.html?commodityId='+commodityId+'&userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/goodDetail.html?commodityId='+commodityId+'&openId='+openId;
+        }
+	});
+	$('#view').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/goodDetail.html?commodityId='+commodityId+'&userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/goodDetail.html?commodityId='+commodityId+'&openId='+openId;
+        }
+	});
+	$('#changshi').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/commonSense.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/commonSense.html?openId='+openId;
+        }
+	});
+	$('#changshitubiao').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/commonSense.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/commonSense.html?openId='+openId;
+        }
+	});
+	$('#wode').click(function() {
+        userId = $.getUrlParam('userId');
+        openId = $.getUrlParam('openId');
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './alreadyLogin.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './login.html?openId='+openId;
+        }
+	});
+	$('#wodetubiao').click(function() {
+        userId = $.getUrlParam('userId');
+        openId = $.getUrlParam('openId');
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './alreadyLogin.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './login.html?openId='+openId;
+        }
+	});
+
+});
+</script>
+</head>
+<body>
+	<header class="aui-bar aui-bar-nav">产品中心</header>
+<div class="aui-content">
+	<div id="aui-slide">
+    <div class="aui-slide-wrap" >
+        <div class="aui-slide-node">
+            <div class="aui-grid">
+                 <div class="aui-content">
+                   	<img alt="icon" src="./img/图层1@2x.png"  height="233px" style="width: 100%;" id="img">
+                 </div>
+            </div>
+        </div>
+      </div>
+      </div>
+        
+     <div class="aui-grid" style="margin-top:15px;margin-bottom:84px;width:100%;height: 225px;">
+     	<div class="aui-content" style="margin-top:15px;margin-bottom:15px;margin-left:15px;width:18px;height:auto; float:left; display:inline;">
+     		<img alt="icon" src="./img/推荐@3x.png" width="18px" height="21px" >
+     	</div>
+		<div class="aui-content" style="margin-top:15px;margin-bottom:15px;width:80px;height:auto; float:left; display:inline;">
+			 <font color="#333333" size="3px">&nbsp;&nbsp;&nbsp;热门推荐</font>
+		 </div>
+         <div class="aui-content" style="margin-top:23px;margin-bottom:25px;margin-left:15px;width:345px;height: 145px" id="aui-content-view">
+         </div>
+      </div>
+  
+	<footer class="aui-bar aui-bar-tab" id="tab">
+	    <div class="aui-bar-tab-item aui-active" >
+	        <i class="aui-iconfont aui-icon-home" id="shouyetubiao" ></i>
+	       <div class="aui-bar-tab-label" id="shouye">首页</div>
+	    </div>
+	    <div class="aui-bar-tab-item" >
+	        <i class="aui-iconfont aui-icon-star" id="changshitubiao" ></i>
+	        <div class="aui-bar-tab-label" id="changshi">常识</div>
+	    </div>
+	    <div class="aui-bar-tab-item" >
+	        <i class="aui-iconfont aui-icon-my" id="wodetubiao" ></i>
+	        <div class="aui-bar-tab-label" id="wode">我的</div>
+	    </div>
+	</footer>
+
+</div>
+</body>
+</html>

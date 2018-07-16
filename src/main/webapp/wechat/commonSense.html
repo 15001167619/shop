@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Hello APP</title>
+ <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+ <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+ <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+ <!--<link rel="stylesheet" type="text/css" href="./css/aui-slide.css" />-->
+
+<!--<script src = "./script/aui/jswaterfll.js"></script>-->
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        function openLinkUrl(knowledgeId) {
+            console.log(knowledgeId);
+            window.location.href = '/wechat/detail.html?knowledgeId='+knowledgeId;
+        };
+
+        var userId,openId;
+        openId = $.getUrlParam('openId');
+        userId = $.getUrlParam('userId');
+	</script>
+    <title>瀑布流布局</title>
+    <style type="text/css">
+		*{
+			padding: 0px;
+			margin: 0px;
+		}
+
+		#main{
+			position: relative;
+
+		}
+		.box{
+	/*      display: inline-block;*/
+			padding: 15px 0px 0px 15px;
+			float: left;
+
+		}
+		.pic{
+			padding: 0px;
+		}
+
+		.pic img{
+			width: 168px;
+			height: auto;
+		}
+   
+		a:link {
+		 font-size: 12px;
+		 color: #000000;
+		 text-decoration: none;
+		}
+		a:visited {
+		 font-size: 12px;
+		 color: #000000;
+		 text-decoration: none;
+		}
+		a:hover {
+		 font-size: 12px;
+		 color: #999999;
+		 text-decoration: underline;
+		}
+	</style>
+	<script type="text/javascript">
+        $(function () {
+
+            (function(){
+                $.ajax({
+                    url : window.apiBasePath+"/api/knowledge/getKnowledgeList",
+                    type : "GET",
+                    async : false,
+                    data : {
+                        pageNo : 1,
+                        pageSize : 80
+                    },
+                    success : function(data) {
+                        if(data.isSuccess==true){
+                            for (var i = 0; i < data.data.listHelp.length; i++) {
+                                var path = data.data.listHelp[i].listPicUrl;
+                                var pathId = "listPicUrl_"+i;
+                                var knowledgeId = data.data.listHelp[i].knowledgeId;
+                                console.log(knowledgeId);
+                                $("#main").append(
+                                    "<div class = 'box' id='"+knowledgeId+"' onclick='openLinkUrl("+knowledgeId+")'><div class = 'pic'><img alt='icon' src=''  id='"+pathId+"' ></div>"+
+										"<div class='aui-content aui-grid' style='width:168px;height:106px'>"+
+										"<ul class='aui-list aui-media-list'><li class='aui-list-item'>"+
+										"<div class='aui-list-item-inner'><div class='aui-list-item-text'>"+
+										"<div class='aui-list-item-title'>"+data.data.listHelp[i].name+"</div></div>"+
+										"<div class='aui-list-item-text'>"+data.data.listHelp[i].desc+"</div>"+
+										"<div class='aui-info aui-margin-t-5' style='padding:0'>"+
+										"<div class='aui-info-item'><img alt='icon' src='./img/LOGO@3x.png' width='23px' height='23px' ></div>"+
+										"<div class='aui-info-item' style='color:#A9A9A9;'><img alt='icon' src='./img/阅读@2x.png' width='10px' height='12px' >"+
+										"<span>"+"已阅读"+data.data.listHelp[i].browseCount+"</span>"+
+										"</div></div></div></li></ul></div></div>");
+                                $("#listPicUrl_"+i).attr('src',path);
+                            }
+                        }
+
+                    }
+                });
+            }());
+
+        });
+	</script>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav">常识</header>
+<div class="aui-content" style="height: 603px; ">
+
+<div id = "main">
+ </div>
+
+	<footer class="aui-bar aui-bar-tab" id="tab">
+	    <div class="aui-bar-tab-item aui-active" >
+	        <i class="aui-iconfont aui-icon-home" id="shouyetubiao" ></i>
+	       <div class="aui-bar-tab-label" id="shouye">首页</div>
+	    </div>
+	    <div class="aui-bar-tab-item" >
+	        <i class="aui-iconfont aui-icon-star" id="changshitubiao" ></i>
+	        <div class="aui-bar-tab-label" id="changshi">常识</div>
+	    </div>
+	    <div class="aui-bar-tab-item" >
+	        <i class="aui-iconfont aui-icon-my" id="wodetubiao" ></i>
+	        <div class="aui-bar-tab-label" id="wode">我的</div>
+	    </div>
+	</footer>
+</div>
+</body>
+<script type="text/javascript">
+window.onload = function(){
+    waterFull('main','box');
+}
+
+function waterFull(parent,children){
+    var oParent = document.getElementById(parent);
+    //var oBoxs = parent.querySelectorAll(".box");
+
+     var oBoxs = getByClass(oParent,children);
+
+    //计算整个页面显示的列数
+
+    var oBoxW = oBoxs[0].offsetWidth;
+
+    var cols = Math.floor(document.documentElement.clientWidth/oBoxW);
+
+    //设置main的宽度，并且居中
+
+    oParent.style.cssText = 'width:'+oBoxW * cols +'px; margin: 0 auto';
+
+    //找出高度最小的图片，将下一个图片放在下面
+
+    //定义一个数组，存放每一列的高度，初始化存的是第一行的所有列的高度
+
+    var arrH = [];
+
+    for(var i = 0; i< oBoxs.length ; i++){
+        if(i < cols){
+            arrH.push(oBoxs[i].offsetHeight);
+        }
+        else{
+            var minH = Math.min.apply(null,arrH);
+
+            var minIndex = getMinhIndex(arrH,minH);
+
+            oBoxs[i].style.position = 'absolute';
+            oBoxs[i].style.top= minH + 'px';
+            oBoxs[i].style.left = minIndex * oBoxW + 'px'; 
+        //  oBoxs[i].style.left = arrH[minIndex].;
+
+            arrH[minIndex] += oBoxs[i].offsetHeight; 
+        }
+    }
+
+
+}
+function getByClass(parent,className){
+
+    var boxArr = new Array();//用来获取所有class为box的元素
+
+    oElement = parent.getElementsByTagName('*');
+
+    for (var i = 0; i <oElement.length; i++) {
+
+        if(oElement[i].className == className){
+
+            boxArr.push(oElement[i]);
+
+        }
+    };
+    return boxArr;
+}
+
+
+//获取当前最小值得下标
+function getMinhIndex(array,min){
+
+    for(var i in array){
+
+        if(array[i] == min)
+
+            return i;
+    }
+}
+
+$(function () { 
+	$('#shouye').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/index.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/index.html?openId='+openId;
+        }
+	});
+
+	$('#boxId').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/index.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/index.html?openId='+openId;
+        }
+	});
+	$('#shouyetubiao').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/index.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/index.html?openId='+openId;
+        }
+	});
+	$('#changshi').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/commonSense.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/commonSense.html?openId='+openId;
+        }
+	});
+	$('#changshitubiao').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = '/wechat/commonSense.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = '/wechat/commonSense.html?openId='+openId;
+        }
+	});
+    $('#wode').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './alreadyLogin.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './login.html?openId='+openId;
+        }
+    });
+    $('#wodetubiao').click(function() {
+        if((userId!="" && userId != null) && (openId !="" && openId != null)){
+            window.userId = userId;
+            window.openId = openId;
+            window.location.href = './alreadyLogin.html?userId='+userId+'&openId='+openId;
+        }else{
+            window.location.href = './login.html?openId='+openId;
+        }
+    });
+});
+
+</script>
+</html>

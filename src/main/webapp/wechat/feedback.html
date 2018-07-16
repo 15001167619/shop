@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+    <!--<link rel="stylesheet" type="text/css" href="./css/aui-slide.css" />-->
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+        })(jQuery);
+	</script>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav">意见反馈</header>
+<input id="primaryPicUrl" type="hidden"/>
+<div class="aui-content">
+	<div class="aui-content-padding" style="margin-top:10px;margin-bottom:10px;margin-left:20px;width:130px;height:12px">
+		<font size="2px" color="#666666">我想反馈的问题/意见</font>
+	</div>
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:10px;margin-left:15px;width:345px;height:124px">
+		<div class="aui-content aui-margin-b-15">
+	    <ul class="aui-list aui-media-list">
+	       <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-input">
+                    <textarea id="feedbackDesc"></textarea>
+                 </div>
+               </div>
+            </li>
+	        </ul>
+	        </div>
+		</div>
+
+	<div class="aui-content-padding" style="margin-top:10px;margin-bottom:10px;margin-left:28px;width:136px;height:12px">
+		<font size="1px" color="#666666">请提供相关截图或照片</font>
+	</div>
+
+	<div class="aui-grid" style="margin-bottom:213px;margin-left:15px;width:346px;height:114px">
+		<div class="aui-content aui-margin-b-15">
+			<ul class="aui-list aui-media-list">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-input">
+							<div class="controls">
+								<div id="previewPrimary">
+									<img id="imgPrimaryName" alt="" src="../wechat/img/z_add.png" style="width: 100px;height:100px">
+								</div>
+								<input type="file" onchange="previewPrimary(this)" id="primaryUrlPic" />
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="aui-content-padded" style="margin-bottom:14px;">
+      		<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="submitForm()">保存</div>
+     </div>	
+	
+	<div class="aui-content" style="margin-left:140px;margin-bottom:15px;">
+		<secton>
+			<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-left"></i>   
+        	</div>
+        	<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-right"></i>
+        	</div>
+		</secton>
+	</div>
+</div>
+<script>
+
+    function submitForm(){
+        var primaryPicUrl = $("#primaryPicUrl").val();
+        var feedbackDesc = $("#feedbackDesc").val();
+        var userId = $.getUrlParam('userId');
+        $.ajax({
+            url : window.apiBasePath+"/api/feedback/addFeedback",
+            type : "POST",
+            data : {
+                picUrl : primaryPicUrl,
+                feedbackDesc : feedbackDesc,
+                userId : userId
+            },
+            async : false,
+            success : function(data) {
+                if(data.isSuccess==true){
+                    window.location.href = '/wechat/alreadyLogin.html?userId='+userId;
+                }
+
+            }
+        });
+
+    }
+
+    function previewPrimary(file) {
+        var formData = new FormData();
+        var primaryCoverPic = $("#primaryUrlPic").val();
+        formData.append("file", $("#primaryUrlPic")[0].files[0]);
+        formData.append("headerPic", primaryCoverPic);
+        var primaryPicPath;
+        $.ajax({
+            url: window.apiBasePath+"/api/picture/feedbackAlbumUpload",
+            type : 'POST',
+            data : formData,
+            async : false,
+            cache : false,
+            contentType : false,
+            processData : false,
+            success : function(data) {
+                var picLinkUrl = data.basePath+data.picPath;
+                console.log(picLinkUrl);
+                $("#imgPrimaryName").attr("src",picLinkUrl);
+                primaryPicPath =  data.picPath;
+                $("#primaryPicUrl").val(primaryPicPath);
+            },
+            error : function(data) {
+                alert(data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

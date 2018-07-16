@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui-slide.css" />
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/aui/aui-tab.js" ></script>
+	<script type="text/javascript" src="./script/aui/aui-slide.js" ></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+	</script>
+	<script type="text/javascript">
+
+		var commodityId;
+
+        $(function () {
+
+            (function () {
+                commodityId = $.getUrlParam('commodityId');
+                $.ajax({
+                    url: window.apiBasePath + "/api/commodity/getCommodityDetails",
+                    type: "GET",
+                    data: {
+                        commodityId: commodityId
+                    },
+                    async: false,
+                    success: function (data) {
+                        if (data.isSuccess == true) {
+                            console.log(data);
+                            // var userName, gender, birthday;
+                            // userName = data.data.userName;
+                            // gender = data.data.gender;
+                            // birthday = data.data.birthday;
+                            // $("#userName").val(userName);
+                            // $("#gender").val(gender);
+                            // $("#birthday").val(birthday);
+                            // if (gender == 1) {
+                            //     $("#male").attr("checked", true)
+                            // } else if (gender == 2) {
+                            //     $("#female").attr("checked", true)
+                            // }
+
+                        }
+
+                    }
+                });
+            }());
+
+        });
+
+	</script>
+    <style>
+	    .dialog{position: fixed;top: 0; left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.5) !important;z-index: 200;}
+	    .tag{float: left;border: 1px solid #ccc;border-radius: 5px;padding: 2px 5px;font-size:12px;margin-left: 5px;}
+	    .tag-active{border-color:#FF3B2F;background: #FF3B2F;color: #fff;}
+	    
+	    .aui-slide-node img{
+	    	width:207px;
+	    	height: 206px;
+	    }
+	</style>
+</head>
+<body>
+<header class="aui-bar aui-bar-nav">详情</header>
+<div class="aui-content">
+
+<div class="aui-content" style="margin-bottom:0px;width:100%;height: 233px;">
+<!-- ./img/图层1@2x.png -->
+		<img alt="icon" src="./img/图层1@2x.png" height="233px" style="width: 100%;" >
+</div>
+
+<div class="aui-content aui-margin-b-10">
+    <ul class="aui-list aui-media-list">
+        <li class="aui-list-item aui-list-item">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title">${goodsNames[0]}</div>
+                    </div>
+                    <div class="aui-list-item-text aui-ellipsis-2"style="color:#A9A9A9;size:1px;">
+                    	${goodsNames[1]}
+                    </div>
+                      <div  style="color:#e51c23;size:3px;width: 77px; height:auto; float:left; display:inline;">
+	                    	<b>￥${goods_price}</b>               
+	                    </div>
+	                    <c:if test="${flag}">
+	                    <div style="background: url('./img/圆角矩形4@3x.png ') no-repeat;width: 91px;height:auto; float:left; display:inline;color:#fff;">
+	                    	<div style="margin-left:7px; "><font size="1px">已优惠${coupons.cps_price}元</font></div>
+	                    </div>
+	                    </c:if>
+                </div>
+            </div>
+        </li>
+      </ul>
+ </div>
+
+<div class="aui-content aui-margin-b-10">
+    <ul class="aui-list aui-media-list">
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width:2rem;height:auto; float:left; display:inline;">
+                    <img src="./img/优惠券@2x.png" class="aui-img aui-list-img-sm" style="width: 20px;height:14px;">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" 
+                style="width:47rem;height:auto; float:left; display:inline;" onclick="toCoupons()" >
+                 	优惠券
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="aui-content aui-margin-b-0" >
+    <ul class="aui-list aui-form-list">
+        <li class="aui-list-item"  onclick="$('#dialog').show();">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label aui-list-item-arrow"  style="width: 375px;">
+                 	   规格  &nbsp;      
+                 	<font color="#808080">选择   尺码    颜色分类</font>
+                </div>
+            </div>
+        </li>
+    </ul>	
+</div>
+
+<div class="aui-tab" id="tab" style="margin-top:30px;">
+    <div class="aui-tab-item aui-active">商品详情</div>
+    <div class="aui-tab-item "><div></div>用户评论</div>
+</div>
+
+<div id="tab1" class="tab-box aui-grid" style="margin-top:10px;width:100%;">
+${goods_detail}
+</div>
+
+<div id="tab2" class="tab-box" style="display: none;">
+<c:forEach items="${userReviewsList}" var="userReviewsMap">
+	<div class="aui-content aui-margin-t-10">
+    <ul class="aui-list aui-media-list">
+        <li class="aui-list-item aui-list-item">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                    	<div class="aui-list-item-media" style="width: 3rem;">
+                   			  <img src="./img/图层1@2x.png" class="aui-img-round aui-list-img-sm" width="31px" height="30px">
+                   			<!--<img src=" ${userReviewsMap.user.head_img}" class="aui-img-round aui-list-img-sm" width="31px" height="30px">-->
+                		</div>
+                        <div class="aui-list-item-inner aui-list-item">
+                  			  ${userReviewsMap.user.realname}<!-- 流浪男 -->
+                		</div>
+       	                 <div class="aui-list-item-right" style="width: 110px;">${userReviewsMap.userReviews.time}<!-- 2018-06-03 --></div>
+                    </div>
+                    <div class="aui-list-item-text aui-ellipsis-2" style="size: 1px;color: #A9A9A9;">
+                   		尺码：${userReviewsMap.spes[1]}     颜色分类：${userReviewsMap.spes[0]} <!-- 尺码：43     颜色分类：黑色 -->
+                    </div>
+                    <div class="aui-list-item-text aui-ellipsis-2">
+                            ${userReviewsMap.userReviews.content}                                   
+                            <!-- 这里是内容区域，新版中的列表布局可以很轻松的帮助开发者完成常见列表样式。 -->
+                    </div>
+                </div>
+            </div>
+        </li>
+     </ul>
+ </div>
+ </c:forEach>
+</div>
+
+<div class="aui-content-padded" style="margin-top:83px;margin-bottom:14px;">
+     <c:if test="${flag==true}">
+     	<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="buyNow(${coupons.cps_id})">立即购买</div>
+	</c:if>
+	<c:if test="${flag==false}">
+     	<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="buyItNow()">立即购买</div>
+	</c:if>
+</div>
+  
+<div class="aui-content" style="margin-top:14px;margin-left:140px;">
+		<secton>
+			<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-left"></i>   
+        	</div>
+        	<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-right"></i>
+        	</div>
+		</secton>
+</div>
+	 
+</div>
+
+
+<div id="dialog" class="dialog" style="display: none;">
+    <div style="position:absolute;bottom:0;z-index: 101;width: 100%;height: 70%;background: #fff;">
+        <div style="padding: 20px 0;text-align: center;" tapmode onclick="calltel()">
+            <div class="aui-grid" style="margin-bottom:0px;width:375px;height: 246px">
+	<div class="aui-content " style="margin-top:10px;margin-left:345px; color: #808080;" onclick="$('#dialog').hide();">
+		<img alt="icon" src="./img/错@2x.png" width="15px" height="15px">
+	</div>
+	<div id="aui-slide" >
+		<div class="aui-slide-wrap" >
+			 <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center">
+			        <div class="aui-slide-node bg-dark" >
+		            	<img src="./img/图层3@3x.png" />
+		      	  	</div>
+			        <div class="aui-slide-node bg-dark">
+			            <img src="./img/图层1@3x.png" />
+			        </div>
+			          <div class="aui-slide-node bg-dark">
+			            <img src="./img/图层1@2x.png" />
+			        </div>
+		      </div>
+		</div>
+		 <div class="aui-slide-page-wrap"><!--分页容器--></div>
+	</div>
+</div>
+	<div class="aui-content " style="margin-top:0px;margin-bottom:27px">
+		<div class="aui-content aui-margin-b-15">
+    		<ul class="aui-list aui-form-list">
+				<li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		               		    颜色:
+		                </div>
+		                <div class="aui-list-item-input">
+		                <c:forEach items="${colors}" var="color">
+		                	<!-- <div class="tag tag-active">白色</div>
+		                	<div class="tag">黑色</div>
+		                	<div class="tag">红色</div> -->
+		                	<c:if test="${color=='白色'}"><div class="tag tag-active" >${color}</div></c:if>
+		                	<c:if test="${color!='白色'}"><div class="tag" >${color}</div></c:if>
+		                </c:forEach>
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		               		    尺码:
+		                </div>
+		                 <div class="aui-list-item-input">
+		                 <c:forEach items="${sizes}" var="size">
+		                	<!-- <div class="tag">39</div>
+		                	<div class="tag">40</div>
+		                	<div class="tag  tag-active">41</div>
+		                	<div class="tag">42</div>
+		                	<div class="tag">43</div>
+		                	<div class="tag">44</div> -->
+		                	<c:if test="${size=='41'}"><div class="tag  tag-active" >${size}</div></c:if>
+		                	<c:if test="${size!='41'}"><div class="tag" >${size}</div></c:if>
+		                  </c:forEach>
+		                </div>
+		            </div>
+		        </li>
+		     </ul>
+		 </div>
+	</div>
+
+	<div class="aui-content-padded" style="margin-top:39px;margin-bottom:25px;">
+	<c:if test="${flag==true}">
+     	<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="buyNow(${coupons.cps_id})">立即购买</div>
+	</c:if>
+	<c:if test="${flag==false}">
+     	<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="buyItNow()">立即购买</div>
+	</c:if>
+	</div>
+
+</div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+var tab = new auiTab({
+    element:document.getElementById("tab"),
+    index:1,
+    repeatClick:false
+},function(ret){
+    console.log(ret);
+    $(".tab-box").hide();
+    $("#tab"+ret.index).show();
+});
+
+
+
+$(".tag").on('click',function(ret){
+	$(this).parent(".aui-list-item-input").children(".tag").removeClass("tag-active");
+	$(this).addClass("tag-active");
+})
+
+
+
+ var slide = new auiSlide({
+        container:document.getElementById("aui-slide"),
+       	"width:":207,
+        "height":206,
+        "speed":300,
+        "pageShow":true,
+        "pageStyle":'dot',
+        "loop":true,
+        'dotPosition':'center',
+        currentPage:currentFun
+    })
+    
+function currentFun(index) {
+    console.log(index);
+}
+function toCoupons(){
+	window.location.href = '/main/toCoupons.html';
+}
+var cps_id;
+function buyNow(cps_id){
+	var $tagGroup = $(".aui-list-item-input");
+	var $colortag = $tagGroup.eq(0).children(".tag");
+	var $sizetag = $tagGroup.eq(1).children(".tag");
+	var color,size;
+	for(var i=0;i<$colortag.length;i++){
+		if($colortag.eq(i).hasClass('tag-active')){
+			color = $colortag.eq(i).text();
+		}
+	}
+	for(var i=0;i<$sizetag.length;i++){
+		if($sizetag.eq(i).hasClass('tag-active')){
+			size = $sizetag.eq(i).text();
+		}
+	}
+	console.log("color:"+color+">>>size:"+size);
+	window.location.href = '/main/toBuy.html?color='+color+'&size='+size+'&cps_id='+cps_id;
+}
+function buyItNow(){
+	var $tagGroup = $(".aui-list-item-input");
+	var $colortag = $tagGroup.eq(0).children(".tag");
+	var $sizetag = $tagGroup.eq(1).children(".tag");
+	var color,size;
+	for(var i=0;i<$colortag.length;i++){
+		if($colortag.eq(i).hasClass('tag-active')){
+			color = $colortag.eq(i).text();
+		}
+	}
+	for(var i=0;i<$sizetag.length;i++){
+		if($sizetag.eq(i).hasClass('tag-active')){
+			size = $sizetag.eq(i).text();
+		}
+	}
+	console.log("color:"+color+">>>size:"+size);
+	window.location.href = '/main/toBuy.html?color='+color+'&size='+size;
+}
+</script>
+</html>

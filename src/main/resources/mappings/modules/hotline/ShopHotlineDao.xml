@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.hotline.dao.ShopHotlineDao">
+    
+	<sql id="shopHotlineColumns">
+		a.id AS "id",
+		a.telephone AS "telephone",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.status AS "status",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+	<sql id="shopHotlineJoins">
+	</sql>
+    
+	<select id="get" resultType="ShopHotline">
+		SELECT 
+			<include refid="shopHotlineColumns"/>
+		FROM shop_hotline a
+		<include refid="shopHotlineJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopHotline">
+		SELECT 
+			<include refid="shopHotlineColumns"/>
+		FROM shop_hotline a
+		<include refid="shopHotlineJoins"/>
+		<where>
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopHotline">
+		SELECT 
+			<include refid="shopHotlineColumns"/>
+		FROM shop_hotline a
+		<include refid="shopHotlineJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_hotline(
+			telephone,
+			begin_time,
+			end_time,
+			status,
+			add_time,
+			deleted
+		) VALUES (
+			#{telephone},
+			#{beginTime},
+			#{endTime},
+			#{status},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_hotline SET 	
+			telephone = #{telephone},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			status = #{status},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+
+	<update id="forbidden" parameterType="int">
+		UPDATE shop_hotline SET
+			status = 1
+		WHERE id = #{id}
+	</update>
+
+	<update id="enable" parameterType="int">
+		UPDATE shop_hotline SET
+			status = 0
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_hotline
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

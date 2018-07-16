@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui/aui-slide.css" />
+	<script type="text/javascript" src="./script/aui/api.js"></script>
+	<script type="text/javascript" src="./script/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="./script/shop-base-api.js"></script>
+	<script type="text/javascript">
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+	</script>
+</head>
+<script type="text/javascript">
+    $(function () {
+
+        (function(){
+            userId = $.getUrlParam('userId');
+            $.ajax({
+                url : window.apiBasePath+"/api/address/getProvinceList",
+                type : "GET",
+                async : false,
+                success : function(data) {
+                    if(data.isSuccess==true){
+                        for (var i = 0; i < data.data.length; i++) {
+                            $("#province").append(
+                                "<option  value='"+data.data[i].provinceId+"'>"
+                                + data.data[i].provinceName
+                                + "</option>");
+                        }
+
+                    }
+
+                }
+            });
+        }());
+
+    });
+</script>
+<body>
+<header class="aui-bar aui-bar-nav">添加收货地址</header>
+<div class="aui-content">
+  <form action="/main/addAddress.html" method="post" id="form">
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:10px;width:100%;height: 100px;">
+		<div class="aui-content aui-margin-b-15">
+    <ul class="aui-list aui-form-list">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                 	  收件人
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入收件人姓名" name="addr_user" id="name">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                   	 联系电话
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入联系电话" name="addr_tel" id="mobile">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                	   所在地区
+                </div>
+                <div class="aui-list-item-input aui-pull-right" style="display: inline-block;">
+                	<div style="float:left;font-size: 1em;bottom:0;margin-right: 40px;vertical-align:bottom;display: inline-block;">
+                    <select id="province" name="province" onChange="provinceChange(this)">
+					  <option>请选择所在省份</option>
+					</select>
+					</div>
+					<div style="float:left;margin-right:40px;display: inline-block;">
+					<select id="city" name="city" onChange="cityChange(this)">
+					  <option >请选择所在城市</option>
+					</select>
+					</div>
+					<div style="float:left;">
+					<select id="area" name="area">
+					  <option>请选择所在城区</option>
+					</select>
+					</div>
+                </div>
+                
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                  	  详细地址
+                </div>
+                <div class="aui-list-item-input">
+                    <textarea name="addr_name" placeholder="请输入详细地址" id="address"></textarea>
+                 </div>
+               </div>
+            </li>
+        </ul>
+        </div>
+	</div>
+	
+	<div class="aui-grid" style="margin-top:10px;margin-bottom:208px;width:100%;height: 40px">
+		<ul class="aui-list aui-select-list">
+    		<li class="aui-list-item">
+            	<div class="aui-list-item-inner">
+                <label>设为默认 <input class="aui-checkbox" type="radio" name="isdefault" style="float:right;" value="0" onclick="isDefault(this)"></label>
+            	</div>
+       		 </li>
+    	</ul>
+	</div>
+	
+	<div class="aui-content-padded" style="margin-bottom:14px;">
+      		<div class="aui-btn aui-btn-danger aui-btn-block aui-btn-sm" onclick="submitForm()">保存</div>
+     </div>
+   </form>
+	<div class="aui-content" style="margin-top:14px;margin-left:140px;">
+		<secton>
+			<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-left"></i>   
+        	</div>
+        	<div class="aui-col-xs-4">
+            	<i class="aui-iconfont aui-icon-right"></i>
+        	</div>
+		</secton>
+	</div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    var provinceId,cityId,isDefaultValue = 0,areaId,userId;
+
+	function isDefault(obj) {
+        isDefaultValue = $("input[name='isdefault']:checked").val();
+        if(isDefaultValue==0){//设置默认
+            obj.value = 1;
+            isDefaultValue = 1;
+		}
+    }
+
+    function provinceChange(obj) {
+        provinceId = obj.options[obj.selectedIndex].value;
+        $.ajax({
+            url : window.apiBasePath+"/api/address/getCityList",
+            type : "GET",
+            data : {
+                provinceId : provinceId
+            },
+            async : false,
+            success : function(data) {
+                $("#city").html("");
+                $("#city").append("<option >请选择所在城市</option>");
+                $("#area").html("");
+                $("#area").append("<option >请选择所在城区</option>");
+
+                if(data.isSuccess==true){
+                    for (var i = 0; i < data.data.length; i++) {
+                        $("#city").append(
+                            "<option  value='"+data.data[i].cityId+"'>"
+                            + data.data[i].cityName
+                            + "</option>");
+                    }
+
+                }
+
+            }
+        });
+    }
+    function cityChange(obj) {
+        cityId = obj.options[obj.selectedIndex].value;
+        $.ajax({
+            url : window.apiBasePath+"/api/address/getAreaList",
+            type : "GET",
+            data : {
+                cityId : cityId
+            },
+            async : false,
+            success : function(data) {
+                $("#area").html("");
+                $("#area").append("<option >请选择所在城区</option>");
+
+                if(data.isSuccess==true){
+                    for (var i = 0; i < data.data.length; i++) {
+                        $("#area").append(
+                            "<option  value='"+data.data[i].areaId+"'>"
+                            + data.data[i].areaName
+                            + "</option>");
+                    }
+
+                }
+
+            }
+        });
+    }
+
+	function submitForm(){
+        var name = $("#name").val();
+        var mobile = $("#mobile").val();
+        var address = $("#address").val();
+        provinceId = $("#province").val();
+        cityId = $("#city").val();
+        areaId = $("#area").val();
+		$.ajax({
+			url : window.apiBasePath+"/api/address/saveAddress",
+			type : "POST",
+			data : {
+				name : name,
+				mobile : mobile,
+				address : address,
+				provinceId : provinceId,
+				cityId : cityId,
+				userId : userId,
+				isDefault : isDefaultValue,
+				areaId : areaId
+			},
+			async : false,
+			success : function(data) {
+				if(data.isSuccess==true){
+                    window.location.href = '/wechat/listArea.html?userId='+userId;
+				}
+
+			}
+		});
+
+	}
+</script>
+</html>

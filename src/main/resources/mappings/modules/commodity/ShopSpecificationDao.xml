@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.commodity.dao.ShopSpecificationDao">
+    
+	<sql id="shopSpecificationColumns">
+		a.id AS "id",
+		a.commodity_id AS "commodityId",
+		a.color AS "color",
+		a.size AS "size",
+		a.pic_url AS "picUrl",
+		a.add_time AS "addTime"
+	</sql>
+	
+	<sql id="shopSpecificationJoins">
+	</sql>
+    
+	<select id="get" resultType="ShopSpecification">
+		SELECT 
+			<include refid="shopSpecificationColumns"/>
+		FROM shop_specification a
+		<include refid="shopSpecificationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopSpecification">
+		SELECT 
+			<include refid="shopSpecificationColumns"/>
+		FROM shop_specification a
+		<include refid="shopSpecificationJoins"/>
+		<where>
+			<if test="commodityId != null and commodityId != ''">
+				AND a.commodity_id = #{commodityId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopSpecification">
+		SELECT 
+			<include refid="shopSpecificationColumns"/>
+		FROM shop_specification a
+		<include refid="shopSpecificationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_specification(
+			commodity_id,
+			color,
+			size,
+			pic_url,
+			add_time
+		) VALUES (
+			#{commodityId},
+			#{color},
+			#{size},
+			#{picUrl},
+			#{addTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_specification SET 	
+			commodity_id = #{commodityId},
+			color = #{color},
+			size = #{size},
+			pic_url = #{picUrl},
+			add_time = #{addTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_specification
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteAllByCommodityId" parameterType="int">
+		DELETE FROM shop_specification
+		WHERE commodity_id = #{commodityId}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.commodity.dao.ShopCommodityDao">
+    
+	<sql id="shopCommodityColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.english_name AS "englishName",
+		a.brief AS "brief",
+		a.is_on_sale AS "isOnSale",
+		a.counter_price AS "counterPrice",
+		a.list_pic_url AS "listPicUrl",
+		a.unit AS "unit",
+		a.retail_price AS "retailPrice",
+		a.description AS "description",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+	<sql id="shopCommodityJoins">
+	</sql>
+    
+	<select id="get" resultType="ShopCommodity">
+		SELECT 
+			<include refid="shopCommodityColumns"/>
+		FROM shop_commodity a
+		<include refid="shopCommodityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopCommodity">
+		SELECT 
+			<include refid="shopCommodityColumns"/>
+		FROM shop_commodity a
+		<include refid="shopCommodityJoins"/>
+		<where>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="isOnSale != null">
+				AND a.is_on_sale = #{isOnSale}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopCommodity">
+		SELECT 
+			<include refid="shopCommodityColumns"/>
+		FROM shop_commodity a
+		<include refid="shopCommodityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		<selectKey resultType="java.lang.String" order="AFTER"
+				   keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		INSERT INTO shop_commodity(
+			name,
+			english_name,
+			brief,
+			is_on_sale,
+			counter_price,
+			list_pic_url,
+			unit,
+			retail_price,
+			description,
+			add_time,
+			deleted
+		) VALUES (
+			#{name},
+			#{englishName},
+			#{brief},
+			#{isOnSale},
+			#{counterPrice},
+			#{listPicUrl},
+			#{unit},
+			#{retailPrice},
+			#{description},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_commodity SET 	
+			name = #{name},
+			english_name = #{englishName},
+			brief = #{brief},
+			is_on_sale = #{isOnSale},
+			counter_price = #{counterPrice},
+			list_pic_url = #{listPicUrl},
+			unit = #{unit},
+			retail_price = #{retailPrice},
+			description = #{description},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_commodity
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

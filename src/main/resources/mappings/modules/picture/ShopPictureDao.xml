@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.picture.dao.ShopPictureDao">
+    
+	<sql id="shopPictureColumns">
+		a.id AS "id",
+		a.business_id AS "businessId",
+		a.business_type AS "businessType",
+		a.picture_type AS "pictureType",
+		a.path AS "path",
+		a.add_time AS "addTime"
+	</sql>
+	
+	<sql id="shopPictureJoins">
+	</sql>
+    
+	<select id="get" resultType="ShopPicture">
+		SELECT 
+			<include refid="shopPictureColumns"/>
+		FROM shop_picture a
+		<include refid="shopPictureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopPicture">
+		SELECT 
+			<include refid="shopPictureColumns"/>
+		FROM shop_picture a
+		<include refid="shopPictureJoins"/>
+		<where>
+			
+			<if test="businessId != null and businessId != ''">
+				AND a.business_id = #{businessId}
+			</if>
+			<if test="businessType != null">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="pictureType != null">
+				AND a.picture_type = #{pictureType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ShopPicture">
+		SELECT 
+			<include refid="shopPictureColumns"/>
+		FROM shop_picture a
+		<include refid="shopPictureJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_picture(
+			business_id,
+			business_type,
+			picture_type,
+			path,
+			add_time
+		) VALUES (
+			#{businessId},
+			#{businessType},
+			#{pictureType},
+			#{path},
+			#{addTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_picture SET 	
+			business_id = #{businessId},
+			business_type = #{businessType},
+			picture_type = #{pictureType},
+			path = #{path},
+			add_time = #{addTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM shop_picture
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteAllPicture">
+		DELETE FROM shop_picture
+		WHERE business_id = #{businessId} and
+			  business_type = #{businessType} and
+			  picture_type = #{pictureType}
+	</update>
+
+</mapper>

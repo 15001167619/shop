@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znkf.shop.modules.order.dao.ShopOrderDao">
+    
+	<sql id="shopOrderColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.color AS "color",
+		a.size AS "size",
+		a.pic AS "pic",
+		a.commodity_id AS "commodityId",
+		a.order_status AS "orderStatus",
+		a.consignee AS "consignee",
+		a.mobile AS "mobile",
+		a.address AS "address",
+		a.goods_price AS "goodsPrice",
+		a.freight_price AS "freightPrice",
+		a.coupon_price AS "couponPrice",
+		a.integral_price AS "integralPrice",
+		a.order_price AS "orderPrice",
+		a.actual_price AS "actualPrice",
+		a.pay_id AS "payId",
+		a.pay_status AS "payStatus",
+		a.pay_time AS "payTime",
+		a.ship_sn AS "shipSn",
+		a.ship_channel AS "shipChannel",
+		a.ship_start_time AS "shipStartTime",
+		a.ship_end_time AS "shipEndTime",
+		a.confirm_time AS "confirmTime",
+		a.add_time AS "addTime",
+		a.deleted AS "deleted"
+	</sql>
+	
+
+	<select id="get" resultType="ShopOrder">
+		SELECT 
+			<include refid="shopOrderColumns"/>
+		FROM shop_order a
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShopOrder">
+		SELECT 
+			<include refid="shopOrderColumns"/>
+		FROM shop_order a
+		<where>
+			
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="commodityId != null and commodityId != ''">
+				AND a.commodity_id = #{commodityId}
+			</if>
+			<if test="orderStatus != null">
+				AND a.order_status = #{orderStatus}
+			</if>
+			<if test="consignee != null and consignee != ''">
+				AND a.consignee LIKE 
+					<if test="dbName == 'mysql'">concat('%',#{consignee},'%')</if>
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile LIKE 
+					<if test="dbName == 'mysql'">concat('%',#{mobile},'%')</if>
+			</if>
+			<if test="goodsPrice != null and goodsPrice != ''">
+				AND a.goods_price = #{goodsPrice}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.add_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findOrderPage" resultType="ShopOrder">
+		select * from (
+		select so.id,so.user_id as userId,so.commodity_id as commodityId,so.order_status as orderStatus, so.actual_price as actualPrice,so.order_price as orderPrice,
+		so.color,so.size,so.pic,so.add_time as addTime,
+		sc.name,sc.brief from shop_order so left join shop_commodity sc on so.commodity_id = sc.id)
+		a
+		<where>
+
+			<if test="userId != null and userId != ''">
+				AND a.userId = #{userId}
+			</if>
+			<if test="commodityId != null and commodityId != ''">
+				AND a.commodityId = #{commodityId}
+			</if>
+			<if test="orderStatus != null">
+				AND a.orderStatus = #{orderStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.addTime desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ShopOrder">
+		SELECT 
+			<include refid="shopOrderColumns"/>
+		FROM shop_order a
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO shop_order(
+			user_id,
+			color,
+			size,
+			pic,
+			commodity_id,
+			order_status,
+			consignee,
+			mobile,
+			address,
+			goods_price,
+			freight_price,
+			coupon_price,
+			integral_price,
+			order_price,
+			actual_price,
+			pay_id,
+			pay_status,
+			pay_time,
+			ship_sn,
+			ship_channel,
+			ship_start_time,
+			ship_end_time,
+			confirm_time,
+			add_time,
+			deleted
+		) VALUES (
+			#{userId},
+			#{color},
+			#{size},
+			#{pic},
+			#{commodityId},
+			#{orderStatus},
+			#{consignee},
+			#{mobile},
+			#{address},
+			#{goodsPrice},
+			#{freightPrice},
+			#{couponPrice},
+			#{integralPrice},
+			#{orderPrice},
+			#{actualPrice},
+			#{payId},
+			#{payStatus},
+			#{payTime},
+			#{shipSn},
+			#{shipChannel},
+			#{shipStartTime},
+			#{shipEndTime},
+			#{confirmTime},
+			#{addTime},
+			#{deleted}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE shop_order SET 	
+			user_id = #{userId},
+			commodity_id = #{commodityId},
+			order_status = #{orderStatus},
+			consignee = #{consignee},
+			mobile = #{mobile},
+			address = #{address},
+			goods_price = #{goodsPrice},
+			freight_price = #{freightPrice},
+			coupon_price = #{couponPrice},
+			integral_price = #{integralPrice},
+			order_price = #{orderPrice},
+			actual_price = #{actualPrice},
+			pay_id = #{payId},
+			pay_status = #{payStatus},
+			pay_time = #{payTime},
+			ship_sn = #{shipSn},
+			ship_channel = #{shipChannel},
+			ship_start_time = #{shipStartTime},
+			ship_end_time = #{shipEndTime},
+			confirm_time = #{confirmTime},
+			add_time = #{addTime},
+			deleted = #{deleted}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteOrder" parameterType="int">
+		DELETE FROM shop_order
+		WHERE user_id =#{0}
+		AND id = #{1}
+
+	</delete>
+	
+	<update id="delete">
+		DELETE FROM shop_order
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateOrder">
+		UPDATE shop_order SET
+			order_status =#{2}
+			WHERE id =#{1}
+			and user_id =#{0}
+	</update>
+
+
+	
+</mapper>
